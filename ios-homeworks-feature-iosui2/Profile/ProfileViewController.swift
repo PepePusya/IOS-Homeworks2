@@ -1,27 +1,29 @@
-//
-//  ProfileViewController.swift
-//  ios-homeworks-feature-iosui2
-//
-//  Created by Anna Zaytseva on 2023/11/08.
-//
 
 import Foundation
 import UIKit
- 
+
 
 class ProfileViewController: UIViewController {
+    
+    private let profileHeaderView = ProfileHeaderView()
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = .lightGray
         
-        let profileHeaderView = ProfileHeaderView()
-        
         view.addSubview(profileHeaderView)
-        profileHeaderView.frame = view.bounds
-    }
-    
-    @objc func buttonPressed() {
         
+        profileHeaderView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            profileHeaderView.leftAnchor.constraint(equalTo: view.leftAnchor),
+            profileHeaderView.rightAnchor.constraint(equalTo: view.rightAnchor),
+            profileHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            profileHeaderView.heightAnchor.constraint(equalToConstant: 220.0),
+        ])
     }
-    
 }
+
+
+
+
