@@ -1,8 +1,8 @@
 //
 //  SceneDelegate.swift
-//  NavigationLast
+//  ios-homeworks-feature-iosui2
 //
-//  Created by Anna Zaytseva on 2023/12/15.
+//  Created by Anna Zaytseva on 2023/11/08.
 //
 
 import UIKit
@@ -13,31 +13,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        
         guard let windowScene = (scene as? UIWindowScene) else { return }
-
-        let tabBarControler = UITabBarController()
-
-        let feedNavController = UINavigationController()
-        let profileNavController = UINavigationController()
-
-        let feedVC = FeedViewController()
-        let profileVC = ProfileViewController()
-
-        feedNavController.viewControllers = [feedVC]
-        profileNavController.viewControllers = [profileVC]
-
-        feedNavController.tabBarItem = UITabBarItem(title: "Line", image: UIImage(systemName: "house"), tag: 0)
-        profileNavController.tabBarItem = UITabBarItem (title: "Profile", image: UIImage(systemName:  "person"), tag: 1)
-
-        tabBarControler.viewControllers = [feedNavController, profileNavController]
-
-        let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = tabBarControler
-        self.window = window
-        window.makeKeyAndVisible()
+        
+        
+        let profileViewController = ProfileViewController()
+        window = UIWindow(windowScene: windowScene)
+        window?.rootViewController = profileViewController
+        window?.makeKeyAndVisible()
+        
     }
-
-
+        
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.
@@ -68,3 +54,4 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
 
 }
+
