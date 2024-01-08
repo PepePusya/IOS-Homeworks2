@@ -45,7 +45,7 @@ class ProfileHeaderView: UIView {
         return label
         
     }()
-    
+
     let statusTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -73,8 +73,7 @@ class ProfileHeaderView: UIView {
     }
     
     required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        setupUI()
+        fatalError("init:(coder:) has not been implemented")
     }
     
     private func setupUI() {
@@ -113,9 +112,11 @@ class ProfileHeaderView: UIView {
             statusTextField.trailingAnchor.constraint(equalTo: safeAreaGuide.trailingAnchor, constant: -16.0),
             statusTextField.heightAnchor.constraint(equalToConstant: 40.0)
         ])
-        setStatusButton.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
+        setStatusButton.addTarget(self, action: #selector(setStatusButtonTapped), for: .touchUpInside)
     }
-    @objc private func buttonPressed() {
-        print(statusLabel.text ?? "")
+    @objc private func setStatusButtonTapped() {
+        statusLabel.text = statusTextField.text
     }
+    
+    
 }
