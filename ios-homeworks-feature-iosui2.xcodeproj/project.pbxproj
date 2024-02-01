@@ -15,6 +15,7 @@
 		5C3F16C32AFB5CC4007168D9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5C3F16C12AFB5CC4007168D9 /* LaunchScreen.storyboard */; };
 		5C3F16CC2AFB5D88007168D9 /* ProfileHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3F16CB2AFB5D88007168D9 /* ProfileHeaderView.swift */; };
 		5C3F16CE2AFB5E5F007168D9 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3F16CD2AFB5E5F007168D9 /* ProfileViewController.swift */; };
+		5CEF25262B6B9EBB00B33A7C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CEF25252B6B9EBB00B33A7C /* LoginViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,6 +29,7 @@
 		5C3F16C42AFB5CC4007168D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5C3F16CB2AFB5D88007168D9 /* ProfileHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeaderView.swift; sourceTree = "<group>"; };
 		5C3F16CD2AFB5E5F007168D9 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		5CEF25252B6B9EBB00B33A7C /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 			children = (
 				5C3F16CB2AFB5D88007168D9 /* ProfileHeaderView.swift */,
 				5C3F16CD2AFB5E5F007168D9 /* ProfileViewController.swift */,
+				5CEF25252B6B9EBB00B33A7C /* LoginViewController.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -152,6 +155,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CEF25262B6B9EBB00B33A7C /* LoginViewController.swift in Sources */,
 				5C3F16BB2AFB5CC2007168D9 /* ViewController.swift in Sources */,
 				5C3F16B72AFB5CC2007168D9 /* AppDelegate.swift in Sources */,
 				5C3F16CE2AFB5E5F007168D9 /* ProfileViewController.swift in Sources */,

@@ -1,4 +1,5 @@
 
+
 import Foundation
 import UIKit
 
@@ -8,11 +9,12 @@ class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        setupView()
+        setupViews()
         setupConstraints()
     }
 
-    private func setupView() {
+    private func setupViews() {
+        
         view.backgroundColor = .lightGray
         view.addSubview(profileHeaderView)
     }
@@ -26,5 +28,13 @@ class ProfileViewController: UIViewController {
             profileHeaderView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             profileHeaderView.heightAnchor.constraint(equalToConstant: 220.0)
         ])
+    }
+    @objc func profileButtonTapped() {
+        let loginVC = LoginViewController()
+        self.present(loginVC, animated: true, completion: nil)
+    }
+    func setupProfileButton() {
+        let profileButton = UIButton()
+        profileButton.addTarget(self, action: #selector(profileButtonTapped), for: .touchUpInside)
     }
 }
