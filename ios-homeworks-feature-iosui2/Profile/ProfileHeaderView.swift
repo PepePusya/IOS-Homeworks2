@@ -1,5 +1,6 @@
-
 import UIKit
+
+
 class ProfileHeaderView: UIView {
     
     let avatarImageView: UIImageView = {

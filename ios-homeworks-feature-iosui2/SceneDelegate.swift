@@ -13,19 +13,31 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
-
         let profileVC = ProfileViewController()
         profileVC.title = "Profile"
 
-       
         let profileNavigationController = UINavigationController(rootViewController: profileVC)
-        profileNavigationController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(named: "image"), selectedImage: nil)
+        profileNavigationController.tabBarItem = UITabBarItem(title: "Profile", image: UIImage(named: "logo"), selectedImage: nil)
 
+    
         let tabBarController = UITabBarController()
         tabBarController.viewControllers = [profileNavigationController]
 
+
         window = UIWindow(windowScene: windowScene)
-        window?.rootViewController = tabBarController
+        
+
+        let isAuthenticated = false
+
+        if isAuthenticated {
+         
+            window?.rootViewController = tabBarController
+        } else {
+           
+            let loginVC = LoginViewController()
+            window?.rootViewController = loginVC
+        }
+        
         window?.makeKeyAndVisible()
     }
 }
