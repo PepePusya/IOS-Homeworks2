@@ -57,8 +57,23 @@ class LoginViewController: UIViewController {
         let stackView = UIStackView(arrangedSubviews: [emailTextField, passwordTextField])
         stackView.axis = .vertical
         stackView.spacing = 0
+        stackView.layer.borderWidth = 0.5
+        stackView.layer.borderColor = UIColor.lightGray.cgColor
+        stackView.layer.cornerRadius = 10
+        stackView.clipsToBounds = true
+        stackView.distribution = .fillEqually
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
+    }()
+    
+    private let separatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .lightGray
+        view.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            view.heightAnchor.constraint(equalToConstant: 0.5)
+        ])
+        return view
     }()
     
     override func viewDidLoad() {
@@ -69,22 +84,19 @@ class LoginViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        let nc = NotificationCenter.default
-        nc.addObserver(self, selector: #selector(keyboardShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        nc.addObserver(self, selector: #selector(keyboardHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        let nc = NotificationCenter.default
-        nc.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        nc.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-        
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     @objc private func touchLoginButton() {
         let profileViewController = ProfileViewController()
-        present(profileViewController, animated: true, completion: nil)
+        navigationController?.pushViewController(profileViewController, animated: true)
     }
     
     @objc private func keyboardShow(notification: NSNotification) {
@@ -102,18 +114,24 @@ class LoginViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
-    @objc private func keyboardWillShow(notification: Notification) {
-        guard let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
-        let keyboardHeight = keyboardFrame.cgRectValue.height
-        let bottomInset = keyboardHeight - view.safeAreaInsets.bottom
-        scrollView.contentInset.bottom = bottomInset
-        scrollView.verticalScrollIndicatorInsets.bottom = bottomInset
+    @objc private func keyboardWillShow(notification: NSNotification) {
+        guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+        
+        // Добавить отступ внизу UIScrollView
+        let keyboardHeight = keyboardSize.height
+        scrollView.contentInset.bottom = keyboardHeight
+        scrollView.verticalScrollIndicatorInsets.bottom = keyboardHeight
+        
+        // Прокрутите, чтобы кнопка Log In была видна
+        let buttonRect = loginButton.convert(loginButton.bounds, to: scrollView)
+        scrollView.scrollRectToVisible(buttonRect, animated: true)
     }
     
     @objc private func keyboardWillHide(notification: Notification) {
         scrollView.contentInset.bottom = 0
-        scrollView.verticalScrollIndicatorInsets.bottom = 0
+        scrollView.verticalScrollIndicatorInsets = scrollView.contentInset
     }
+    
     
     deinit {
         NotificationCenter.default.removeObserver(self)
