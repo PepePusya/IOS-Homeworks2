@@ -117,12 +117,12 @@ class LoginViewController: UIViewController {
     @objc private func keyboardWillShow(notification: NSNotification) {
         guard let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
         
-        // Добавить отступ внизу UIScrollView
+
         let keyboardHeight = keyboardSize.height
         scrollView.contentInset.bottom = keyboardHeight
         scrollView.verticalScrollIndicatorInsets.bottom = keyboardHeight
         
-        // Прокрутите, чтобы кнопка Log In была видна
+      
         let buttonRect = loginButton.convert(loginButton.bounds, to: scrollView)
         scrollView.scrollRectToVisible(buttonRect, animated: true)
     }

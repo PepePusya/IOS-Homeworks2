@@ -1,4 +1,3 @@
-
 import UIKit
 
 class ProfileViewController: UIViewController {
@@ -27,23 +26,20 @@ class ProfileViewController: UIViewController {
             tableView.rightAnchor.constraint(equalTo: view.rightAnchor)
         ])
         
-        tableView.estimatedRowHeight = 400
+        tableView.estimatedRowHeight = 400.0
         tableView.rowHeight = UITableView.automaticDimension
         
-       
         let headerView = ProfileHeaderView()
-        headerView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 220) //
+        headerView.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: 220.0)
         tableView.tableHeaderView = headerView
     }
 
     private func loadDummyData() {
-       
         posts = [
-            Post (author: "Pepe Cat", description: "She is a Liar", imageName: "liarCat", likes: 120, views: 300),
-            Post(author: "Crazy Dog", description: "Miting with Pepe Cat", imageName: "postImage1", likes: 100, views: 230)
-            
-            
-            
+            Post(author: "Pepe Cat", description: "She is a Liar", imageName: "liarCat", likes: 120, views: 300),
+            Post(author: "Crazy Dog", description: "Miting with Pepe Cat", imageName: "postImage1", likes: 100, views: 230),
+            Post(author: "Crazy Dog", description: "Are you ok, my friend? Are you became a vegetarian?", imageName: "veganCat", likes: 29, views: 450),
+            Post(author: "Pusya Rabbit", description: "Haha, soon i will take over the world!", imageName: "Pusya", likes: 400, views: 402)
         ]
     }
 }
@@ -63,13 +59,12 @@ extension ProfileViewController: UITableViewDataSource {
     }
 }
 
-
 extension ProfileViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return UITableView.automaticDimension
     }
 
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 400
+        return 400.0
     }
 }
