@@ -15,6 +15,9 @@
 		5C3F16C32AFB5CC4007168D9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5C3F16C12AFB5CC4007168D9 /* LaunchScreen.storyboard */; };
 		5C3F16CC2AFB5D88007168D9 /* ProfileHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3F16CB2AFB5D88007168D9 /* ProfileHeaderView.swift */; };
 		5C3F16CE2AFB5E5F007168D9 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3F16CD2AFB5E5F007168D9 /* ProfileViewController.swift */; };
+		5C69AF562B95A8CA00D68A2D /* PhotosTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C69AF552B95A8CA00D68A2D /* PhotosTableViewCell.swift */; };
+		5C69AF582B9C62CF00D68A2D /* PhotosViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C69AF572B9C62CF00D68A2D /* PhotosViewController.swift */; };
+		5C69AF5A2B9C640A00D68A2D /* PhotoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C69AF592B9C640A00D68A2D /* PhotoCollectionViewCell.swift */; };
 		5CAC99A32B80A0AD0044AE2F /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CAC99A22B80A0AD0044AE2F /* Post.swift */; };
 		5CAC99A52B80A48A0044AE2F /* PostTableVewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CAC99A42B80A48A0044AE2F /* PostTableVewCell.swift */; };
 		5CEF25262B6B9EBB00B33A7C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CEF25252B6B9EBB00B33A7C /* LoginViewController.swift */; };
@@ -31,6 +34,9 @@
 		5C3F16C42AFB5CC4007168D9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5C3F16CB2AFB5D88007168D9 /* ProfileHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeaderView.swift; sourceTree = "<group>"; };
 		5C3F16CD2AFB5E5F007168D9 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		5C69AF552B95A8CA00D68A2D /* PhotosTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosTableViewCell.swift; sourceTree = "<group>"; };
+		5C69AF572B9C62CF00D68A2D /* PhotosViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosViewController.swift; sourceTree = "<group>"; };
+		5C69AF592B9C640A00D68A2D /* PhotoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCollectionViewCell.swift; sourceTree = "<group>"; };
 		5CAC99A22B80A0AD0044AE2F /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
 		5CAC99A42B80A48A0044AE2F /* PostTableVewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostTableVewCell.swift; sourceTree = "<group>"; };
 		5CEF25252B6B9EBB00B33A7C /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -86,6 +92,9 @@
 				5CEF25252B6B9EBB00B33A7C /* LoginViewController.swift */,
 				5CAC99A22B80A0AD0044AE2F /* Post.swift */,
 				5CAC99A42B80A48A0044AE2F /* PostTableVewCell.swift */,
+				5C69AF552B95A8CA00D68A2D /* PhotosTableViewCell.swift */,
+				5C69AF572B9C62CF00D68A2D /* PhotosViewController.swift */,
+				5C69AF592B9C640A00D68A2D /* PhotoCollectionViewCell.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -161,6 +170,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C69AF562B95A8CA00D68A2D /* PhotosTableViewCell.swift in Sources */,
 				5CEF25262B6B9EBB00B33A7C /* LoginViewController.swift in Sources */,
 				5CAC99A52B80A48A0044AE2F /* PostTableVewCell.swift in Sources */,
 				5C3F16BB2AFB5CC2007168D9 /* ViewController.swift in Sources */,
@@ -169,6 +179,8 @@
 				5C3F16B92AFB5CC2007168D9 /* SceneDelegate.swift in Sources */,
 				5CAC99A32B80A0AD0044AE2F /* Post.swift in Sources */,
 				5C3F16CC2AFB5D88007168D9 /* ProfileHeaderView.swift in Sources */,
+				5C69AF5A2B9C640A00D68A2D /* PhotoCollectionViewCell.swift in Sources */,
+				5C69AF582B9C62CF00D68A2D /* PhotosViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
