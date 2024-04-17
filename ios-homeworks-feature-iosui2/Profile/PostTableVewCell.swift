@@ -5,6 +5,7 @@
 //  Created by Anna Zaytseva on 2024/02/17.
 //
 import UIKit
+import StorageService
 
 class PostTableViewCell: UITableViewCell {
 

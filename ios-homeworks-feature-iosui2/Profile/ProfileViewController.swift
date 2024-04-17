@@ -1,7 +1,8 @@
 import UIKit
+import StorageService
 
 class ProfileViewController: UIViewController {
-    
+
     private var tableView: UITableView!
     private var posts: [Post] = []
 
@@ -11,8 +12,12 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         setupTableView()
         loadDummyData()
+        #if DEBUG
+        view.backgroundColor = .lightGray
+        #else
+        view.backgroundColor = .blue
+        #endif
     }
-
     private func setupTableView() {
         tableView = UITableView(frame: .zero, style: .grouped)
         tableView.delegate = self
@@ -90,3 +95,4 @@ extension ProfileViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
+

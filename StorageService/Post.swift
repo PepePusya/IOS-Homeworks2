@@ -6,13 +6,13 @@
 //
 import UIKit
 import Foundation
-struct Post {
-    let author: String
-    let description: String
-    let imageName: String
-    let likes: Int
-    let views: Int
-    static func getDummyData() -> [Post] {
+public struct Post {
+   public let author: String
+   public let description: String
+   public let imageName: String
+   public let likes: Int
+   public let views: Int
+   public static func getDummyData() -> [Post] {
         return [
             Post(author: "Pepe Cat", description: "She is a Liar", imageName: "liarCat", likes: 120, views: 300),
             Post(author: "Crazy Dog", description: "Miting with Pepe Cat", imageName: "postImage1", likes: 100, views: 230),
