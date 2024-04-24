@@ -4,58 +4,85 @@
 //
 //  Created by Anna Zaytseva on 2024/03/09.
 //
-
-import Foundation
 import UIKit
 
-class PhotosViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+class PhotosViewController: UIViewController {
     
-    var collectionView: UICollectionView!
+    let photoIdent = "photoCell"
 
+    // MARK: Visual objects
+    
+    lazy var layout: UICollectionViewFlowLayout = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumInteritemSpacing = 8
+        layout.minimumLineSpacing = 8
+        layout.scrollDirection = .vertical
+        layout.sectionInset = UIEdgeInsets.init(top: 8, left: 8, bottom: 8, right: 8)
+        return layout
+    }()
+
+    lazy var photosCollectionView: UICollectionView = {
+        let photos = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        photos.translatesAutoresizingMaskIntoConstraints = false
+        photos.backgroundColor = .white
+        photos.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: photoIdent)
+        return photos
+    }()
+    
+    // MARK: - Setup section
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureCollectionView()
+        
+        self.title = "Photo Gallery"
+        self.view.addSubview(photosCollectionView)
+        self.photosCollectionView.dataSource = self
+        self.photosCollectionView.delegate = self
+        setupConstraints()
     }
-
-    private func configureCollectionView() {
-     
-        let layout = UICollectionViewFlowLayout()
-        layout.sectionInset = UIEdgeInsets(top: 8, left: 8, bottom: 8, right: 8)
-        layout.itemSize = CGSize(width: (view.frame.width - 32) / 3, height: (view.frame.width - 32) / 3)
-        layout.minimumLineSpacing = 8
-        layout.minimumInteritemSpacing = 8
-
-     
-        collectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
-        collectionView.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: "PhotosCollectionViewCell")
-        collectionView.backgroundColor = .white
-        collectionView.dataSource = self
-        collectionView.delegate = self
-
- 
-        view.addSubview(collectionView)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-
+    
+    private func setupConstraints() {
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor)
+            photosCollectionView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            photosCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            photosCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            photosCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
         ])
     }
 
-   
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = false
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        navigationController?.navigationBar.isHidden = true
+    }
+}
+
+// MARK: - Extensions
+
+extension PhotosViewController: UICollectionViewDelegateFlowLayout {
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let countItem: CGFloat = 2
+        let accessibleWidth = collectionView.frame.width - 32
+        let widthItem = (accessibleWidth / countItem)
+        return CGSize(width: widthItem, height: widthItem * 0.56)
+    }
+}
+
+extension PhotosViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 20
+        return Photos.shared.examples.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotosCollectionViewCell", for: indexPath) as? PhotosCollectionViewCell else {
-            fatalError("Unable to dequeue PhotosCollectionViewCell")
-        }
-    
-        cell.configure(with: UIImage(named: String(format: "%02d", indexPath.row + 1)))
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: photoIdent, for: indexPath) as? PhotosCollectionViewCell else { return UICollectionViewCell()}
+        cell.configCellCollection(photo: Photos.shared.examples[indexPath.item])
         return cell
     }
 }
+
