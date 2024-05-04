@@ -2,7 +2,7 @@ import UIKit
 import StorageService
 import UIKit
 
-final class ProfileViewController: UIViewController {
+ final class ProfileViewController: UIViewController {
     
     static let headerIdent = "header"
     static let photoIdent = "photo"
@@ -18,18 +18,25 @@ final class ProfileViewController: UIViewController {
     }()
     
     // MARK: - Setup section
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .systemBackground
-        
+
+
+        #if DEBUG
+        view.backgroundColor = .lightGray
+        #else
+        view.backgroundColor = .blue  
+        #endif
+
         view.addSubview(Self.postTableView)
         setupConstraints()
         Self.postTableView.dataSource = self
         Self.postTableView.delegate = self
         Self.postTableView.refreshControl = UIRefreshControl()
         Self.postTableView.refreshControl?.addTarget(self, action: #selector(reloadTableView), for: .valueChanged)
+    
     }
     
     private func setupConstraints() {
@@ -83,6 +90,7 @@ extension ProfileViewController: UITableViewDelegate {
         }
     }
 
+    
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard section == 0 else { return nil }
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Self.headerIdent) as! ProfileHeaderView

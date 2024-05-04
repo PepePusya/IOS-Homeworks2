@@ -6,7 +6,7 @@
 //
 
 import Foundation
-
+import StorageService
 import UIKit
 
 final class PostViewController: UIViewController {
