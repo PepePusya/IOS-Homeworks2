@@ -1,6 +1,6 @@
 
 import UIKit
-
+import SnapKit
 final class ProfileHeaderView: UITableViewHeaderFooterView {
     
     // MARK: Visual objects

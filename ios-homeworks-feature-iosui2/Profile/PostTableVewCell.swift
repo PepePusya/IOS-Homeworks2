@@ -6,7 +6,7 @@
 //
 import UIKit
 import StorageService
-
+import SnapKit
 import UIKit
 
 class PostTableViewCell: UITableViewCell {

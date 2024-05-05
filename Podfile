@@ -6,7 +6,7 @@ target 'ios-homeworks-feature-iosui2' do
   use_frameworks!
 
   # Pods for ios-homeworks-feature-iosui2
-  pod 'SnapKit', '~> 5.0.1'
+  pod 'SnapKit'
 
 end
 
