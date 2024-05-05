@@ -35,8 +35,8 @@
 		5CAD797B2BE64615003EC784 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3F16CD2AFB5E5F007168D9 /* ProfileViewController.swift */; };
 		5CAD79802BE6540F003EC784 /* Pods_ios_homeworks_feature_iosui2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E0A38C9B669D670FA75F2237 /* Pods_ios_homeworks_feature_iosui2.framework */; };
 		5CAD79822BE657B0003EC784 /* Pods_StorageService.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2D88BAFD638B05A0113D4850 /* Pods_StorageService.framework */; };
+		5CAD799C2BE7ACE8003EC784 /* Pods_StorageService_StorageServiceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73015DC472F4F2F94E53BDFF /* Pods_StorageService_StorageServiceTests.framework */; };
 		5CEF25262B6B9EBB00B33A7C /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CEF25252B6B9EBB00B33A7C /* LoginViewController.swift */; };
-		C20DB558D536B7EA72EA6D29 /* Pods_StorageService_StorageServiceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 73015DC472F4F2F94E53BDFF /* Pods_StorageService_StorageServiceTests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -126,8 +126,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5CAD799C2BE7ACE8003EC784 /* Pods_StorageService_StorageServiceTests.framework in Frameworks */,
 				5CAD79432BCFA438003EC784 /* StorageService.framework in Frameworks */,
-				C20DB558D536B7EA72EA6D29 /* Pods_StorageService_StorageServiceTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
