@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import StorageService
+import iOSIntPackage
 
 let postExamples: [Post] = [
     Post(author: "Pepe Cat",

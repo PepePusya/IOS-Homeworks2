@@ -1,3 +1,5 @@
+
+
 import UIKit
 import StorageService
 import UIKit
@@ -27,7 +29,7 @@ import UIKit
         #if DEBUG
         view.backgroundColor = .lightGray
         #else
-        view.backgroundColor = .blue  
+        view.backgroundColor = .blue
         #endif
 
         view.addSubview(Self.postTableView)
@@ -82,7 +84,7 @@ extension ProfileViewController: UITableViewDelegate {
             return cell
         case 1:
             let cell = Self.postTableView.dequeueReusableCell(withIdentifier: Self.postIdent, for: indexPath) as! PostTableViewCell
-            cell.configPostArray(post: postExamples[indexPath.row])
+            cell.configPost(post: postExamples[indexPath.row])
             return cell
         default:
             assertionFailure("no registered section")
@@ -116,4 +118,6 @@ extension ProfileViewController: UITableViewDelegate {
         }
     }
 }
+
+
 
