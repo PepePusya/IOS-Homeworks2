@@ -2,6 +2,7 @@
 //  ProfileHeaderView.swift
 //  Navigation
 //
+
 import UIKit
 import SnapKit
 
@@ -19,7 +20,14 @@ final class ProfileHeaderView: UITableViewHeaderFooterView {
 
     private var statusText = "Looking for something to eat"
     private var avatarOriginPoint = CGPoint()
-
+    
+ 
+    func setup(with user: User) {
+        fullNameLabel.text = user.fullName
+        avatarImageView.image = user.avatar
+        statusLabel.text = user.status
+        statusTextField.text = user.status
+    }
     // MARK: - Setup section
 
     override init(reuseIdentifier: String?) {
@@ -76,7 +84,8 @@ final class ProfileHeaderView: UITableViewHeaderFooterView {
         statusTextField.attributedPlaceholder = NSAttributedString(string: "Ready...", attributes: [NSAttributedString.Key.foregroundColor: UIColor.darkGray])
         statusTextField.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 20))
         statusTextField.leftViewMode = .always
-
+        statusTextField.addTarget(self, action: #selector(statusTextChanged), for: .editingChanged)
+        
         statusTextField.snp.makeConstraints { make in
             make.top.equalTo(statusLabel.snp.bottom).offset(16)
             make.leading.equalTo(fullNameLabel.snp.leading)
@@ -88,7 +97,7 @@ final class ProfileHeaderView: UITableViewHeaderFooterView {
     private func setupStatusButton() {
         addSubview(setStatusButton)
         setStatusButton.backgroundColor = .systemBlue
-        setStatusButton.layer.cornerRadius = 12 
+        setStatusButton.layer.cornerRadius = 12
         setStatusButton.setTitle("Show Status", for: .normal)
         setStatusButton.setTitleColor(.white, for: .normal)
 
@@ -138,15 +147,19 @@ final class ProfileHeaderView: UITableViewHeaderFooterView {
     }
 
     // MARK: - Event handlers
-
+    
     @objc private func statusTextChanged(_ textField: UITextField) {
         statusText = textField.text ?? ""
+        statusLabel.text = statusText
+    
     }
 
     @objc private func statusButtonPressed() {
         statusLabel.text = statusText
     }
 
+
+    
     @objc private func didTapOnAvatar() {
         avatarOriginPoint = avatarImageView.center
         let scale = UIScreen.main.bounds.width / avatarImageView.bounds.width
@@ -184,5 +197,12 @@ extension ProfileHeaderView: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
+    }
+
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField == statusTextField {
+            statusText = textField.text ?? "No status set"
+            statusLabel.text = statusText
+        }
     }
 }

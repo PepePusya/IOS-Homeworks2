@@ -5,12 +5,14 @@
 
 import UIKit
 
- final class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController {
     
     static let headerIdent = "header"
     static let photoIdent = "photo"
     static let postIdent = "post"
    
+    var user: User?  // Свойство для пользователя
+
     static var postTableView: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -20,12 +22,10 @@ import UIKit
         return table
     }()
     
-    // MARK: - Setup section
     override func viewDidLoad() {
         super.viewDidLoad()
 
         view.backgroundColor = .systemBackground
-
 
         #if DEBUG
         view.backgroundColor = .lightGray
@@ -39,9 +39,8 @@ import UIKit
         Self.postTableView.delegate = self
         Self.postTableView.refreshControl = UIRefreshControl()
         Self.postTableView.refreshControl?.addTarget(self, action: #selector(reloadTableView), for: .valueChanged)
-    
     }
-    
+
     private func setupConstraints() {
         NSLayoutConstraint.activate([
             Self.postTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -57,8 +56,7 @@ import UIKit
     }
 }
 
-// MARK: - Extensions
-
+// MARK: - UITableViewDataSource
 extension ProfileViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -76,6 +74,7 @@ extension ProfileViewController: UITableViewDataSource {
     }
 }
 
+// MARK: - UITableViewDelegate
 extension ProfileViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -92,11 +91,13 @@ extension ProfileViewController: UITableViewDelegate {
             return UITableViewCell()
         }
     }
-
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard section == 0 else { return nil }
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Self.headerIdent) as! ProfileHeaderView
+        if let user = user {
+            headerView.setup(with: user)  
+        }
         return headerView
     }
 
@@ -119,10 +120,3 @@ extension ProfileViewController: UITableViewDelegate {
         }
     }
 }
-
-
-
-
-
-
-

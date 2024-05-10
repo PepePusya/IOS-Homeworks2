@@ -31,6 +31,10 @@
 		5C3A5CE82BEB0363007CF17D /* SnapKit-Dynamic in Frameworks */ = {isa = PBXBuildFile; productRef = 5C3A5CE72BEB0363007CF17D /* SnapKit-Dynamic */; };
 		5C3A5CEB2BEB0381007CF17D /* iOSIntPackage in Frameworks */ = {isa = PBXBuildFile; productRef = 5C3A5CEA2BEB0381007CF17D /* iOSIntPackage */; };
 		5C3A5CED2BEB053C007CF17D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5C3A5CEC2BEB053C007CF17D /* Assets.xcassets */; };
+		5C3A5CF72BEE27D1007CF17D /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3A5CF62BEE27D1007CF17D /* User.swift */; };
+		5C3A5CF92BEE27F7007CF17D /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3A5CF82BEE27F7007CF17D /* UserService.swift */; };
+		5C3A5CFB2BEE2818007CF17D /* CurrentUserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3A5CFA2BEE2818007CF17D /* CurrentUserService.swift */; };
+		5C3A5CFD2BEE562B007CF17D /* testUserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3A5CFC2BEE562B007CF17D /* testUserService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +59,10 @@
 		36C5F0622850B7B6005EFC6C /* PhotosCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotosCollectionViewCell.swift; sourceTree = "<group>"; };
 		36C5F0642850C9D1005EFC6C /* PostExamples.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostExamples.swift; sourceTree = "<group>"; };
 		5C3A5CEC2BEB053C007CF17D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5C3A5CF62BEE27D1007CF17D /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		5C3A5CF82BEE27F7007CF17D /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		5C3A5CFA2BEE2818007CF17D /* CurrentUserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentUserService.swift; sourceTree = "<group>"; };
+		5C3A5CFC2BEE562B007CF17D /* testUserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = testUserService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +100,8 @@
 		3601A2A628490DDF000D261A /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				5C3A5CF52BEE27B3007CF17D /* User */,
+				3601A2A728490DDF000D261A /* AppDelegate.swift */,
 				36528E3A284F703400965BA4 /* Library */,
 				3601A2C5284A771D000D261A /* Profile */,
 				3601A2BB28494D5D000D261A /* FeedViewController.swift */,
@@ -122,7 +132,6 @@
 		36528E3A284F703400965BA4 /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				3601A2A728490DDF000D261A /* AppDelegate.swift */,
 				36528E38284F700900965BA4 /* ExtensionUIImage.swift */,
 				36528E40284FE38C00965BA4 /* ExtensionUIView.swift */,
 				36C5F05D2850B4A6005EFC6C /* PhotoExamples.swift */,
@@ -130,6 +139,17 @@
 				36528E3B284F725E00965BA4 /* LayoutConstants.swift */,
 			);
 			path = Library;
+			sourceTree = "<group>";
+		};
+		5C3A5CF52BEE27B3007CF17D /* User */ = {
+			isa = PBXGroup;
+			children = (
+				5C3A5CF62BEE27D1007CF17D /* User.swift */,
+				5C3A5CF82BEE27F7007CF17D /* UserService.swift */,
+				5C3A5CFA2BEE2818007CF17D /* CurrentUserService.swift */,
+				5C3A5CFC2BEE562B007CF17D /* testUserService.swift */,
+			);
+			path = User;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -221,12 +241,16 @@
 				36528E37284F5E3800965BA4 /* LoginViewController.swift in Sources */,
 				36528E41284FE38C00965BA4 /* ExtensionUIView.swift in Sources */,
 				36C5F05E2850B4A6005EFC6C /* PhotoExamples.swift in Sources */,
+				5C3A5CFD2BEE562B007CF17D /* testUserService.swift in Sources */,
 				3601A2C7284A776A000D261A /* ProfileHeaderView.swift in Sources */,
 				36C5F0652850C9D1005EFC6C /* PostExamples.swift in Sources */,
+				5C3A5CFB2BEE2818007CF17D /* CurrentUserService.swift in Sources */,
 				36C5F0612850B723005EFC6C /* PhotosViewController.swift in Sources */,
 				36528E39284F700900965BA4 /* ExtensionUIImage.swift in Sources */,
 				36C5F05C2850B1B1005EFC6C /* PhotosTableViewCell.swift in Sources */,
+				5C3A5CF92BEE27F7007CF17D /* UserService.swift in Sources */,
 				3601A2C42849E232000D261A /* InfoViewController.swift in Sources */,
+				5C3A5CF72BEE27D1007CF17D /* User.swift in Sources */,
 				36C5F0632850B7B6005EFC6C /* PhotosCollectionViewCell.swift in Sources */,
 				3601A2C228495DDF000D261A /* Post.swift in Sources */,
 				36528E3C284F725E00965BA4 /* LayoutConstants.swift in Sources */,

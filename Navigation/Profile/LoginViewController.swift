@@ -5,8 +5,15 @@
 
 import UIKit
 
-final class LoginViewController: UIViewController {
+    final class LoginViewController: UIViewController {
     
+        var userService: UserService = {
+            let testUser = User(login: "testUser", fullName: "Test User", avatar: UIImage(named: "userAvatar")!, status: "Just testing")
+            return CurrentUserService(user: testUser)
+        }()
+
+    
+            
     // MARK: Visual content
     
     var loginScrollView: UIScrollView = {
@@ -97,11 +104,29 @@ final class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+      
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.isHidden = true
         
         setupViews()
     }
+        
+        func loginAction() {
+            guard let loginText = loginField.text, !loginText.isEmpty else { return }
+
+            if let user = userService.getUser(login: loginText) {
+               
+                let profileVC = ProfileViewController()
+                profileVC.user = user
+                navigationController?.pushViewController(profileVC, animated: true)
+            } else {
+                print("Invalid username")
+               
+                let alert = UIAlertController(title: "Login Failed", message: "Invalid username", preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+                present(alert, animated: true)
+            }
+              }
     
     private func setupViews() {
         view.addSubview(loginScrollView)
@@ -117,7 +142,12 @@ final class LoginViewController: UIViewController {
         
         setupConstraints()
     }
-
+        
+        private func showAlert(with title: String, message: String) {
+            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+        }
     private func setupConstraints() {
         NSLayoutConstraint.activate([
 
@@ -168,10 +198,30 @@ final class LoginViewController: UIViewController {
     
     // MARK: - Event handlers
 
-    @objc private func touchLoginButton() {
-        let profileVC = ProfileViewController()
-        navigationController?.setViewControllers([profileVC], animated: true)
-    }
+        @objc private func touchLoginButton() {
+            guard let login = loginField.text, !login.isEmpty else {
+                showAlert(with: "Login Required", message: "Please enter your login")
+                return
+            }
+            
+            var userService: UserService = {
+                #if DEBUG
+                let testUserForTest = User(login: "testLogin", fullName: "Test Login", avatar: UIImage(named: "userAvatar2")!, status: "Just Testing")
+                return TestUserService(user: testUserForTest)
+                #else
+                let productionUser = User(login: "prodUser", fullName: "Production User", avatar: UIImage(named: "prodAvatar")!, status: "Production Mode")
+                return CurrentUserService(user: productionUser)
+                #endif
+            }()
+
+            if let user = userService.getUser(login: login) {
+                let profileVC = ProfileViewController()
+                profileVC.user = user
+                navigationController?.pushViewController(profileVC, animated: true)
+            } else {
+                showAlert(with: "Login Failed", message: "Invalid username")
+            }
+        }
 
     @objc private func keyboardShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
@@ -195,3 +245,5 @@ extension LoginViewController: UITextFieldDelegate {
         return true
     }
 }
+
+
