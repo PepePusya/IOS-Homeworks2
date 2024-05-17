@@ -204,15 +204,11 @@ import UIKit
                 return
             }
             
-            var userService: UserService = {
-                #if DEBUG
-                let testUserForTest = User(login: "testLogin", fullName: "Test Login", avatar: UIImage(named: "userAvatar2")!, status: "Just Testing")
-                return TestUserService(user: testUserForTest)
-                #else
-                let productionUser = User(login: "prodUser", fullName: "Production User", avatar: UIImage(named: "prodAvatar")!, status: "Production Mode")
-                return CurrentUserService(user: productionUser)
-                #endif
-            }()
+#if DEBUG
+    let userService = TestUserService(user: User(login: "testLogin", fullName: "Test Login", avatar: UIImage(named: "userAvatar2")!, status: "Just Testing"))
+#else
+    let userService = CurrentUserService(user: User(login: "prodUser", fullName: "Production User", avatar: UIImage(named: "prodAvatar")!, status: "Production Mode"))
+#endif
 
             if let user = userService.getUser(login: login) {
                 let profileVC = ProfileViewController()
