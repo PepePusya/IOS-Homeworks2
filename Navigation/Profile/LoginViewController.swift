@@ -1,4 +1,5 @@
 //
+//
 //  LoginViewController.swift
 //  Navigation
 //
@@ -6,6 +7,8 @@
 import UIKit
 
     final class LoginViewController: UIViewController {
+        
+        var loginDelegate: LoginViewControllerDelegate?
     
         var userService: UserService = {
             let testUser = User(login: "testUser", fullName: "Test User", avatar: UIImage(named: "userAvatar")!, status: "Just testing")
@@ -241,5 +244,4 @@ extension LoginViewController: UITextFieldDelegate {
         return true
     }
 }
-
 
