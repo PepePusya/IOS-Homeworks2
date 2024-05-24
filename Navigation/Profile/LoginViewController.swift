@@ -74,6 +74,7 @@ import UIKit
         let login = UITextField()
         login.translatesAutoresizingMaskIntoConstraints = false
         login.placeholder = "Log In"
+        login.text = "correctLogin"
         login.layer.borderColor = UIColor.lightGray.cgColor
         login.layer.borderWidth = 0.25
         login.leftViewMode = .always
@@ -91,6 +92,7 @@ import UIKit
         password.translatesAutoresizingMaskIntoConstraints = false
         password.leftViewMode = .always
         password.placeholder = "Password"
+        password.text = "correctPassword"
         password.layer.borderColor = UIColor.lightGray.cgColor
         password.layer.borderWidth = 0.25
         password.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: password.frame.height))
@@ -104,15 +106,18 @@ import UIKit
     
     // MARK: - Setup section
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-      
-        view.backgroundColor = .systemBackground
-        navigationController?.navigationBar.isHidden = true
-        
-        setupViews()
-    }
+        override func viewDidLoad() {
+            super.viewDidLoad()
+
+            view.backgroundColor = .systemBackground
+            navigationController?.navigationBar.isHidden = true
+
+            setupViews()
+
+          
+            loginField.text = "correctLogin"
+            passwordField.text = "correctPassword"
+        }
         
         func loginAction() {
             guard let loginText = loginField.text, !loginText.isEmpty else { return }
@@ -201,27 +206,32 @@ import UIKit
     
     // MARK: - Event handlers
 
-        @objc private func touchLoginButton() {
-            guard let login = loginField.text, !login.isEmpty else {
-                showAlert(with: "Login Required", message: "Please enter your login")
-                return
-            }
-            
-#if DEBUG
+            @objc private func touchLoginButton() {
+                guard let login = loginField.text, !login.isEmpty,
+                      let password = passwordField.text, !password.isEmpty else {
+                    showAlert(with: "Login Required", message: "Please enter your login and password")
+                    return
+                }
+
+
+ 
+ #if DEBUG
     let userService = TestUserService(user: User(login: "testLogin", fullName: "Test Login", avatar: UIImage(named: "userAvatar2")!, status: "Just Testing"))
 #else
     let userService = CurrentUserService(user: User(login: "prodUser", fullName: "Production User", avatar: UIImage(named: "prodAvatar")!, status: "Production Mode"))
 #endif
 
-            if let user = userService.getUser(login: login) {
-                let profileVC = ProfileViewController()
-                profileVC.user = user
-                navigationController?.pushViewController(profileVC, animated: true)
-            } else {
-                showAlert(with: "Login Failed", message: "Invalid username")
+ 
+                if loginDelegate?.check(login: login, password: password) == true {
+                    let profileVC = ProfileViewController()
+                    profileVC.user = userService.getUser(login: login)
+                    navigationController?.pushViewController(profileVC, animated: true)
+                } else {
+                    showAlert(with: "Login Failed", message: "Invalid username or password")
+                }
             }
-        }
 
+        
     @objc private func keyboardShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             loginScrollView.contentOffset.y = keyboardSize.height - (loginScrollView.frame.height - loginButton.frame.minY)

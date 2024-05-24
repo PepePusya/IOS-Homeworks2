@@ -7,15 +7,15 @@
 import UIKit
 import Foundation
 
-final class Checker {
+class Checker {
     static let shared = Checker()
-    
-    private let login = "correctLogin"
-    private let password = "correctPassword"
-    
+
+    private let validLogin = "correctLogin"
+    private let validPassword = "correctPassword"
+
     private init() {}
-    
+
     func check(login: String, password: String) -> Bool {
-        return self.login == login && self.password == password
+        return login == validLogin && password == validPassword
     }
 }

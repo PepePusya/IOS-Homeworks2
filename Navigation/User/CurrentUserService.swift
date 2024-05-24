@@ -14,13 +14,7 @@ class CurrentUserService: UserService {
     }
     
     func getUser(login: String) -> User? {
-        print("Attempting login for: \(login)")
-        if login == user.login {
-            print("Login successful for: \(login)")
-            return user
-        } else {
-            print("Login failed for: \(login), expected: \(user.login)")
-            return nil
+        return login == user.login ? user : nil
         }
     }
-}
+
