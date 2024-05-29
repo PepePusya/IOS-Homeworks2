@@ -1,14 +1,15 @@
 //
 //  PhotosViewController.swift
 //  Navigation
-//
-
 import UIKit
+import ImagePublisher
 
-class PhotosViewController: UIViewController {
-    
+class PhotosViewController: UIViewController, ImageLibrarySubscriber {
+
     let photoIdent = "photoCell"
-
+    private var images: [UIImage] = []
+    private var imagePublisherFacade: ImagePublisherFacade?
+    
     // MARK: Visual objects
     
     lazy var layout: UICollectionViewFlowLayout = {
@@ -38,6 +39,15 @@ class PhotosViewController: UIViewController {
         self.photosCollectionView.dataSource = self
         self.photosCollectionView.delegate = self
         setupConstraints()
+        
+        imagePublisherFacade = ImagePublisherFacade()
+        imagePublisherFacade?.add(self)
+        imagePublisherFacade?.addImagesWithTimer(timeInterval: 0.5, repeatCount: 10)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        imagePublisherFacade?.remove(self)
     }
     
     private func setupConstraints() {
@@ -57,6 +67,14 @@ class PhotosViewController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.navigationBar.isHidden = true
+        imagePublisherFacade?.remove(self)
+    }
+    
+    // MARK: - ImageLibrarySubscriber
+    
+    func receive(images: [UIImage]) {
+        self.images.append(contentsOf: images)
+        self.photosCollectionView.reloadData()
     }
 }
 
@@ -75,13 +93,12 @@ extension PhotosViewController: UICollectionViewDelegateFlowLayout {
 extension PhotosViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return Photos.shared.examples.count
+        return images.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: photoIdent, for: indexPath) as? PhotosCollectionViewCell else { return UICollectionViewCell()}
-        cell.configCellCollection(photo: Photos.shared.examples[indexPath.item])
+        cell.configCellCollection(photo: images[indexPath.item])
         return cell
     }
 }
-
