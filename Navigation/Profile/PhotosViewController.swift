@@ -1,17 +1,49 @@
 //
 //  PhotosViewController.swift
 //  Navigation
+
 import UIKit
-import ImagePublisher
+import iOSIntPackage
 
 class PhotosViewController: UIViewController, ImageLibrarySubscriber {
 
-    let photoIdent = "photoCell"
     private var images: [UIImage] = []
     private var imagePublisherFacade: ImagePublisherFacade?
-    
+
+    let photoIdent = "photoCell"
+
+    // MARK: Setup section
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.title = "Photo Gallery"
+        self.view.addSubview(photosCollectionView)
+        self.photosCollectionView.dataSource = self
+        self.photosCollectionView.delegate = self
+        setupConstraints()
+
+        imagePublisherFacade = ImagePublisherFacade()
+        imagePublisherFacade?.subscribe(self)
+        imagePublisherFacade?.addImagesWithTimer(time: 0.5, repeat: 10, userImages: getCustomImages())
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        imagePublisherFacade?.removeSubscription(for: self)
+    }
+
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            photosCollectionView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            photosCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            photosCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            photosCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+        ])
+    }
+
     // MARK: Visual objects
-    
+
     lazy var layout: UICollectionViewFlowLayout = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 8
@@ -28,53 +60,23 @@ class PhotosViewController: UIViewController, ImageLibrarySubscriber {
         photos.register(PhotosCollectionViewCell.self, forCellWithReuseIdentifier: photoIdent)
         return photos
     }()
-    
-    // MARK: - Setup section
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        self.title = "Photo Gallery"
-        self.view.addSubview(photosCollectionView)
-        self.photosCollectionView.dataSource = self
-        self.photosCollectionView.delegate = self
-        setupConstraints()
-        
-        imagePublisherFacade = ImagePublisherFacade()
-        imagePublisherFacade?.add(self)
-        imagePublisherFacade?.addImagesWithTimer(timeInterval: 0.5, repeatCount: 10)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        imagePublisherFacade?.remove(self)
-    }
-    
-    private func setupConstraints() {
-        NSLayoutConstraint.activate([
-            photosCollectionView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            photosCollectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            photosCollectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            photosCollectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
-        ])
-    }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.navigationBar.isHidden = false
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.navigationBar.isHidden = true
-        imagePublisherFacade?.remove(self)
-    }
-    
-    // MARK: - ImageLibrarySubscriber
-    
+    // MARK: ImageLibrarySubscriber method
+
     func receive(images: [UIImage]) {
         self.images.append(contentsOf: images)
         self.photosCollectionView.reloadData()
+    }
+
+    // Получить ваши собственные изображения
+    private func getCustomImages() -> [UIImage] {
+        var customImages: [UIImage] = []
+        for i in 1...19 {
+            if let image = UIImage(named: "\(i)") {
+                customImages.append(image)
+            }
+        }
+        return customImages
     }
 }
 

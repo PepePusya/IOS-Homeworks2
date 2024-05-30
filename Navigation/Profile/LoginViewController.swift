@@ -6,17 +6,15 @@
 
 import UIKit
 
-    final class LoginViewController: UIViewController {
-        
-        var loginDelegate: LoginViewControllerDelegate?
+final class LoginViewController: UIViewController {
     
-        var userService: UserService = {
-            let testUser = User(login: "testUser", fullName: "Test User", avatar: UIImage(named: "userAvatar")!, status: "Just testing")
-            return CurrentUserService(user: testUser)
-        }()
-
+    var loginDelegate: LoginViewControllerDelegate? = LoginInspector() // Инициализация loginDelegate
     
-            
+    var userService: UserService = {
+        let testUser = User(login: "testUser", fullName: "Test User", avatar: UIImage(named: "userAvatar")!, status: "Just testing")
+        return CurrentUserService(user: testUser)
+    }()
+    
     // MARK: Visual content
     
     var loginScrollView: UIScrollView = {
@@ -106,35 +104,18 @@ import UIKit
     
     // MARK: - Setup section
     
-        override func viewDidLoad() {
-            super.viewDidLoad()
+    override func viewDidLoad() {
+        super.viewDidLoad()
 
-            view.backgroundColor = .systemBackground
-            navigationController?.navigationBar.isHidden = true
+        view.backgroundColor = .systemBackground
+        navigationController?.navigationBar.isHidden = true
 
-            setupViews()
+        setupViews()
+        setupConstraints()
 
-          
-            loginField.text = "correctLogin"
-            passwordField.text = "correctPassword"
-        }
-        
-        func loginAction() {
-            guard let loginText = loginField.text, !loginText.isEmpty else { return }
-
-            if let user = userService.getUser(login: loginText) {
-               
-                let profileVC = ProfileViewController()
-                profileVC.user = user
-                navigationController?.pushViewController(profileVC, animated: true)
-            } else {
-                print("Invalid username")
-               
-                let alert = UIAlertController(title: "Login Failed", message: "Invalid username", preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-                present(alert, animated: true)
-            }
-              }
+        loginField.text = "correctLogin"
+        passwordField.text = "correctPassword"
+    }
     
     private func setupViews() {
         view.addSubview(loginScrollView)
@@ -147,15 +128,8 @@ import UIKit
         
         loginField.delegate = self
         passwordField.delegate = self
-        
-        setupConstraints()
     }
-        
-        private func showAlert(with title: String, message: String) {
-            let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
-            present(alert, animated: true)
-        }
+    
     private func setupConstraints() {
         NSLayoutConstraint.activate([
 
@@ -193,7 +167,6 @@ import UIKit
         let nc = NotificationCenter.default
         nc.addObserver(self, selector: #selector(keyboardShow), name: UIResponder.keyboardWillShowNotification, object: nil)
         nc.addObserver(self, selector: #selector(keyboardHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-
     }
 
     override func viewDidDisappear(_ animated: Bool) {
@@ -201,37 +174,38 @@ import UIKit
         let nc = NotificationCenter.default
         nc.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         nc.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-
     }
     
     // MARK: - Event handlers
 
-            @objc private func touchLoginButton() {
-                guard let login = loginField.text, !login.isEmpty,
-                      let password = passwordField.text, !password.isEmpty else {
-                    showAlert(with: "Login Required", message: "Please enter your login and password")
-                    return
-                }
-
-
- 
- #if DEBUG
-    let userService = TestUserService(user: User(login: "testLogin", fullName: "Test Login", avatar: UIImage(named: "userAvatar2")!, status: "Just Testing"))
-#else
-    let userService = CurrentUserService(user: User(login: "prodUser", fullName: "Production User", avatar: UIImage(named: "prodAvatar")!, status: "Production Mode"))
-#endif
-
- 
-                if loginDelegate?.check(login: login, password: password) == true {
-                    let profileVC = ProfileViewController()
-                    profileVC.user = userService.getUser(login: login)
-                    navigationController?.pushViewController(profileVC, animated: true)
-                } else {
-                    showAlert(with: "Login Failed", message: "Invalid username or password")
-                }
-            }
-
+    @objc private func touchLoginButton() {
+        guard let login = loginField.text, !login.isEmpty,
+              let password = passwordField.text, !password.isEmpty else {
+            showAlert(with: "Login Required", message: "Please enter your login and password")
+            return
+        }
         
+        #if DEBUG
+        let userService = TestUserService(user: User(login: "testLogin", fullName: "Test Login", avatar: UIImage(named: "userAvatar2")!, status: "Just Testing"))
+        #else
+        let userService = CurrentUserService(user: User(login: "prodUser", fullName: "Production User", avatar: UIImage(named: "prodAvatar")!, status: "Production Mode"))
+        #endif
+
+        if loginDelegate?.check(login: login, password: password) == true {
+            let profileVC = ProfileViewController()
+            profileVC.user = userService.getUser(login: login)
+            navigationController?.pushViewController(profileVC, animated: true)
+        } else {
+            showAlert(with: "Login Failed", message: "Invalid username or password")
+        }
+    }
+    
+    private func showAlert(with title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+    
     @objc private func keyboardShow(notification: NSNotification) {
         if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
             loginScrollView.contentOffset.y = keyboardSize.height - (loginScrollView.frame.height - loginButton.frame.minY)
@@ -248,10 +222,9 @@ import UIKit
 
 extension LoginViewController: UITextFieldDelegate {
     
-    // tap 'done' on the keyboard
+    // tap 'done' 
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
 }
-
