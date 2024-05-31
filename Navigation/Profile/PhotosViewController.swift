@@ -1,7 +1,6 @@
 //
 //  PhotosViewController.swift
 //  Navigation
-
 import UIKit
 import iOSIntPackage
 
@@ -25,7 +24,7 @@ class PhotosViewController: UIViewController, ImageLibrarySubscriber {
 
         imagePublisherFacade = ImagePublisherFacade()
         imagePublisherFacade?.subscribe(self)
-        imagePublisherFacade?.addImagesWithTimer(time: 0.5, repeat: 10, userImages: getCustomImages())
+        addImagesWithTimer()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -64,19 +63,23 @@ class PhotosViewController: UIViewController, ImageLibrarySubscriber {
     // MARK: ImageLibrarySubscriber method
 
     func receive(images: [UIImage]) {
-        self.images.append(contentsOf: images)
+        self.images = images
         self.photosCollectionView.reloadData()
     }
 
-    // Получить ваши собственные изображения
-    private func getCustomImages() -> [UIImage] {
-        var customImages: [UIImage] = []
-        for i in 1...19 {
-            if let image = UIImage(named: "\(i)") {
-                customImages.append(image)
+    private func addImagesWithTimer() {
+        var index = 0
+        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
+            if index < 20 {
+                if let image = UIImage(named: "\(index + 1)") {
+                    self.images.append(image)
+                    self.photosCollectionView.reloadData()
+                    index += 1
+                }
+            } else {
+                timer.invalidate()
             }
         }
-        return customImages
     }
 }
 
