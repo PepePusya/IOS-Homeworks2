@@ -43,6 +43,7 @@
 		5C3A5D2F2BFC4FBB007CF17D /* MyLoginFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3A5D2E2BFC4FBB007CF17D /* MyLoginFactory.swift */; };
 		5C8BDD592C0995A90054C29B /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C8BDD582C0995A90054C29B /* CustomButton.swift */; };
 		5C8BDD5B2C0995E60054C29B /* FeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C8BDD5A2C0995E60054C29B /* FeedModel.swift */; };
+		5C8BDD5F2C0CB60B0054C29B /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C8BDD5E2C0CB60B0054C29B /* FeedViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -79,6 +80,7 @@
 		5C3A5D2E2BFC4FBB007CF17D /* MyLoginFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLoginFactory.swift; sourceTree = "<group>"; };
 		5C8BDD582C0995A90054C29B /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		5C8BDD5A2C0995E60054C29B /* FeedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedModel.swift; sourceTree = "<group>"; };
+		5C8BDD5E2C0CB60B0054C29B /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +119,7 @@
 			isa = PBXGroup;
 			children = (
 				5C8BDD562C0995500054C29B /* CustomViews */,
+				5C8BDD5D2C0CB5C10054C29B /* ViewModels */,
 				5C3A5D2B2BFC4F3E007CF17D /* Factory */,
 				5C3A5CF52BEE27B3007CF17D /* User */,
 				3601A2A728490DDF000D261A /* AppDelegate.swift */,
@@ -206,6 +209,14 @@
 				3601A2C32849E232000D261A /* InfoViewController.swift */,
 			);
 			path = ViewContollers;
+			sourceTree = "<group>";
+		};
+		5C8BDD5D2C0CB5C10054C29B /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				5C8BDD5E2C0CB60B0054C29B /* FeedViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -309,6 +320,7 @@
 				5C3A5CFB2BEE2818007CF17D /* CurrentUserService.swift in Sources */,
 				36C5F0612850B723005EFC6C /* PhotosViewController.swift in Sources */,
 				5C3A5D282BF728D1007CF17D /* LoginInspector.swift in Sources */,
+				5C8BDD5F2C0CB60B0054C29B /* FeedViewModel.swift in Sources */,
 				36528E39284F700900965BA4 /* ExtensionUIImage.swift in Sources */,
 				36C5F05C2850B1B1005EFC6C /* PhotosTableViewCell.swift in Sources */,
 				5C3A5CF92BEE27F7007CF17D /* UserService.swift in Sources */,

@@ -1,11 +1,11 @@
-//  FeedViewController.swift
-//  Navigation
-//
+// FeedViewController.swift
+// Navigation
+
 import UIKit
 
 final class FeedViewController: UIViewController {
 
-    private let feedModel = FeedModel(secretWord: "password")
+    private let viewModel = FeedViewModel()
 
     private lazy var guessTextField: UITextField = {
         let textField = UITextField()
@@ -15,11 +15,9 @@ final class FeedViewController: UIViewController {
         return textField
     }()
 
-    
     private lazy var checkGuessButton = CustomButton(title: "Check Guess", titleColor: .white) { [weak self] in
-        self?.checkGuess()
+        self?.viewModel.checkGuess(self?.guessTextField.text)
     }
-
 
     private lazy var resultLabel: UILabel = {
         let label = UILabel()
@@ -32,6 +30,7 @@ final class FeedViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemTeal
         createSubView()
+        bindViewModel()
     }
     
     private func createSubView() {
@@ -74,14 +73,12 @@ final class FeedViewController: UIViewController {
         navigationController?.pushViewController(postVC, animated: true)
     }
 
-    private func checkGuess() {
-        guard let guess = guessTextField.text, !guess.isEmpty else { return }
-        if feedModel.check(word: guess) {
-            resultLabel.text = "Correct!"
-            resultLabel.textColor = .green
-        } else {
-            resultLabel.text = "Wrong!"
-            resultLabel.textColor = .red
+    private func bindViewModel() {
+        viewModel.resultText = { [weak self] text in
+            self?.resultLabel.text = text
+        }
+        viewModel.resultColor = { [weak self] color in
+            self?.resultLabel.textColor = color
         }
     }
 }
