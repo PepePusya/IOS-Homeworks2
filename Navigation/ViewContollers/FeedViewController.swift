@@ -15,13 +15,11 @@ final class FeedViewController: UIViewController {
         return textField
     }()
 
-    private lazy var checkGuessButton: CustomButton = {
-        let button = CustomButton(title: "Check Guess", titleColor: .white) { [weak self] in
-            self?.checkGuess()
-        }
-        button.backgroundColor = .systemBlue
-        return button
-    }()
+    
+    private lazy var checkGuessButton = CustomButton(title: "Check Guess", titleColor: .white) { [weak self] in
+        self?.checkGuess()
+    }
+
 
     private lazy var resultLabel: UILabel = {
         let label = UILabel()
