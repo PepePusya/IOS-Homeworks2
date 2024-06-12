@@ -1,19 +1,18 @@
 
-//  ProfileViewController.swift
-//  Navigation
-//
+// ProfileViewController.swift
 
 import UIKit
 
-final class ProfileViewController: UIViewController {
-    
+final class ProfileViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    weak var coordinator: ProfileCoordinator?
+
     static let headerIdent = "header"
     static let photoIdent = "photo"
     static let postIdent = "post"
    
     var user: User?  // Свойство для пользователя
 
-    static var postTableView: UITableView = {
+    private let postTableView: UITableView = {
         let table = UITableView(frame: .zero, style: .grouped)
         table.translatesAutoresizingMaskIntoConstraints = false
         table.register(ProfileHeaderView.self, forHeaderFooterViewReuseIdentifier: headerIdent)
@@ -24,7 +23,7 @@ final class ProfileViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        tabBarItem = UITabBarItem(title: "Profile", image: UIImage(systemName: "person.crop.circle"), selectedImage: UIImage(systemName: "person.crop.circle.fill"))
         view.backgroundColor = .systemBackground
 
         #if DEBUG
@@ -33,31 +32,33 @@ final class ProfileViewController: UIViewController {
         view.backgroundColor = .blue
         #endif
 
-        view.addSubview(Self.postTableView)
+        view.addSubview(postTableView)
         setupConstraints()
-        Self.postTableView.dataSource = self
-        Self.postTableView.delegate = self
-        Self.postTableView.refreshControl = UIRefreshControl()
-        Self.postTableView.refreshControl?.addTarget(self, action: #selector(reloadTableView), for: .valueChanged)
+        postTableView.dataSource = self
+        postTableView.delegate = self
+        postTableView.refreshControl = UIRefreshControl()
+        postTableView.refreshControl?.addTarget(self, action: #selector(reloadTableView), for: .valueChanged)
     }
 
     private func setupConstraints() {
         NSLayoutConstraint.activate([
-            Self.postTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            Self.postTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            Self.postTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            Self.postTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            postTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            postTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            postTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            postTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
 
     @objc func reloadTableView() {
-        Self.postTableView.reloadData()
-        Self.postTableView.refreshControl?.endRefreshing()
+        postTableView.reloadData()
+        postTableView.refreshControl?.endRefreshing()
     }
-}
 
-// MARK: - UITableViewDataSource
-extension ProfileViewController: UITableViewDataSource {
+    // MARK: - UITableViewDataSource
+
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch section {
@@ -69,21 +70,13 @@ extension ProfileViewController: UITableViewDataSource {
         }
     }
 
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
-    }
-}
-
-// MARK: - UITableViewDelegate
-extension ProfileViewController: UITableViewDelegate {
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            let cell = Self.postTableView.dequeueReusableCell(withIdentifier: Self.photoIdent, for: indexPath) as! PhotosTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: Self.photoIdent, for: indexPath) as! PhotosTableViewCell
             return cell
         case 1:
-            let cell = Self.postTableView.dequeueReusableCell(withIdentifier: Self.postIdent, for: indexPath) as! PostTableViewCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: Self.postIdent, for: indexPath) as! PostTableViewCell
             cell.configPost(post: postExamples[indexPath.row])
             return cell
         default:
@@ -91,12 +84,12 @@ extension ProfileViewController: UITableViewDelegate {
             return UITableViewCell()
         }
     }
-    
+
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard section == 0 else { return nil }
         let headerView = tableView.dequeueReusableHeaderFooterView(withIdentifier: Self.headerIdent) as! ProfileHeaderView
         if let user = user {
-            headerView.setup(with: user)  
+            headerView.setup(with: user)
         }
         return headerView
     }

@@ -1,14 +1,14 @@
 //
 //
-//  LoginViewController.swift
-//  Navigation
-//
+// LoginViewController.swift
+// Navigation
 
 import UIKit
 
 final class LoginViewController: UIViewController {
     
-    var loginDelegate: LoginViewControllerDelegate? = LoginInspector() // Инициализация loginDelegate
+    weak var coordinator: MainCoordinator?
+    var loginDelegate: LoginViewControllerDelegate? = LoginInspector()
     
     var userService: UserService = {
         let testUser = User(login: "testUser", fullName: "Test User", avatar: UIImage(named: "userAvatar")!, status: "Just testing")
@@ -192,9 +192,7 @@ final class LoginViewController: UIViewController {
         #endif
 
         if loginDelegate?.check(login: login, password: password) == true {
-            let profileVC = ProfileViewController()
-            profileVC.user = userService.getUser(login: login)
-            navigationController?.pushViewController(profileVC, animated: true)
+            coordinator?.showMainTabBar()
         } else {
             showAlert(with: "Login Failed", message: "Invalid username or password")
         }
@@ -222,7 +220,7 @@ final class LoginViewController: UIViewController {
 
 extension LoginViewController: UITextFieldDelegate {
     
-    // tap 'done' 
+    // tap 'done'
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true

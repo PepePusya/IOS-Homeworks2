@@ -1,12 +1,15 @@
 // FeedViewController.swift
 // Navigation
 
+
+
 import UIKit
 
 final class FeedViewController: UIViewController {
+    weak var coordinator: FeedCoordinator?
 
     private let viewModel = FeedViewModel()
-
+    
     private lazy var guessTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
@@ -14,20 +17,21 @@ final class FeedViewController: UIViewController {
         textField.borderStyle = .roundedRect
         return textField
     }()
-
+    
     private lazy var checkGuessButton = CustomButton(title: "Check Guess", titleColor: .white) { [weak self] in
         self?.viewModel.checkGuess(self?.guessTextField.text)
     }
-
+    
     private lazy var resultLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .center
         return label
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        tabBarItem = UITabBarItem(title: "Feed", image: UIImage(systemName: "text.bubble"), selectedImage: UIImage(systemName: "text.bubble.fill"))
         view.backgroundColor = .systemTeal
         createSubView()
         bindViewModel()
@@ -72,7 +76,7 @@ final class FeedViewController: UIViewController {
         postVC.post = post
         navigationController?.pushViewController(postVC, animated: true)
     }
-
+    
     private func bindViewModel() {
         viewModel.resultText = { [weak self] text in
             self?.resultLabel.text = text
