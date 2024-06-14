@@ -3,6 +3,7 @@
 //  Navigation
 //
 //  Created by Anna Zaytseva on 2024/06/12.
+
 import UIKit
 
 class MainCoordinator: Coordinator {
@@ -25,21 +26,25 @@ class MainCoordinator: Coordinator {
 
     func showMainTabBar() {
         let tabBarController = UITabBarController()
-        
+
         let feedNavigationController = UINavigationController()
         let profileNavigationController = UINavigationController()
-        
+
         let feedCoordinator = FeedCoordinator(navigationController: feedNavigationController)
         let profileCoordinator = ProfileCoordinator(navigationController: profileNavigationController)
-        
+
+        childCoordinators.append(feedCoordinator)
+        childCoordinators.append(profileCoordinator)
+
         feedCoordinator.start()
         profileCoordinator.start()
-        
+
         tabBarController.viewControllers = [
-            profileCoordinator.navigationController,
-            feedCoordinator.navigationController
+            profileNavigationController,
+            feedNavigationController
         ]
-        
+
         navigationController.setViewControllers([tabBarController], animated: true)
     }
 }
+

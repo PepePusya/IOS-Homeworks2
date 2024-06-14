@@ -184,7 +184,7 @@ final class LoginViewController: UIViewController {
             showAlert(with: "Login Required", message: "Please enter your login and password")
             return
         }
-        
+
         #if DEBUG
         let userService = TestUserService(user: User(login: "testLogin", fullName: "Test Login", avatar: UIImage(named: "userAvatar2")!, status: "Just Testing"))
         #else

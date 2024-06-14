@@ -3,11 +3,11 @@
 //  Navigation
 //
 //  Created by Anna Zaytseva on 2024/06/12.
-//
+
 
 import UIKit
 
-class ProfileCoordinator: Coordinator {
+final class ProfileCoordinator: Coordinator {
     var navigationController: UINavigationController
 
     init(navigationController: UINavigationController) {
@@ -18,5 +18,10 @@ class ProfileCoordinator: Coordinator {
         let profileViewController = ProfileViewController()
         profileViewController.coordinator = self
         navigationController.pushViewController(profileViewController, animated: false)
+    }
+
+    func showPhotos() {
+        let photosVC = PhotosViewController()
+        navigationController.pushViewController(photosVC, animated: true)
     }
 }

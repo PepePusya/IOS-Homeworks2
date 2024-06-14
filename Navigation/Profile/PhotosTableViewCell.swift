@@ -6,7 +6,7 @@
 import UIKit
 
 class PhotosTableViewCell: UITableViewCell {
-    
+   
     // MARK: Visual objects
     
     var labelPhotos: UILabel = {

@@ -1,8 +1,6 @@
 // FeedViewController.swift
 // Navigation
 
-
-
 import UIKit
 
 final class FeedViewController: UIViewController {
@@ -71,10 +69,7 @@ final class FeedViewController: UIViewController {
     }
     
     @objc func tapPostButton() {
-        let post = postExamples[0]
-        let postVC = PostViewController()
-        postVC.post = post
-        navigationController?.pushViewController(postVC, animated: true)
+        coordinator?.present(.post)
     }
     
     private func bindViewModel() {

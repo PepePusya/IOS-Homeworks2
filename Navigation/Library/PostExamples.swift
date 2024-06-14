@@ -2,8 +2,6 @@
 //  PostExamples.swift
 //  Navigation
 //
-//  PostExamples.swift
-//  ios-homeworks-feature-iosui2
 //
 //  Created by Anna Zaytseva on 2024/04/24.
 //
