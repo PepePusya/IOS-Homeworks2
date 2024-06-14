@@ -1,6 +1,7 @@
 //
 //  PhotosViewController.swift
 //  Navigation
+
 import UIKit
 import iOSIntPackage
 
@@ -8,6 +9,7 @@ class PhotosViewController: UIViewController, ImageLibrarySubscriber {
 
     private var images: [UIImage] = []
     private var imagePublisherFacade: ImagePublisherFacade?
+    private let imageProcessor = ImageProcessor() // Объявляем imageProcessor
 
     let photoIdent = "photoCell"
 
@@ -24,7 +26,7 @@ class PhotosViewController: UIViewController, ImageLibrarySubscriber {
 
         imagePublisherFacade = ImagePublisherFacade()
         imagePublisherFacade?.subscribe(self)
-        addImagesWithTimer()
+        addImages()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -67,17 +69,29 @@ class PhotosViewController: UIViewController, ImageLibrarySubscriber {
         self.photosCollectionView.reloadData()
     }
 
-    private func addImagesWithTimer() {
-        var index = 0
-        Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { timer in
-            if index < 20 {
-                if let image = UIImage(named: "\(index + 1)") {
-                    self.images.append(image)
-                    self.photosCollectionView.reloadData()
-                    index += 1
+    private func addImages() {
+        images = (1...20).compactMap { UIImage(named: "\($0)") }
+        photosCollectionView.reloadData()
+        processImages()
+    }
+
+    private func processImages() {
+        // Example of different QualityOfService levels
+        let qosLevels: [QualityOfService] = [.userInteractive, .userInitiated, .utility, .background]
+
+        for qos in qosLevels {
+            let start = CFAbsoluteTimeGetCurrent()
+            imageProcessor.processImagesOnThread(sourceImages: images, filter: .noir, qos: qos) { [weak self] processedImages in
+                guard let self = self else { return }
+                self.images = processedImages.compactMap { cgImage -> UIImage? in
+                    guard let cgImage = cgImage else { return nil }
+                    return UIImage(cgImage: cgImage)
                 }
-            } else {
-                timer.invalidate()
+                DispatchQueue.main.async {
+                    self.photosCollectionView.reloadData()
+                    let diff = CFAbsoluteTimeGetCurrent() - start
+                    print("Processing with \(qos) took \(diff) seconds")
+                }
             }
         }
     }
