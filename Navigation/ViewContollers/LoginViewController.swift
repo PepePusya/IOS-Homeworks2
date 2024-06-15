@@ -6,7 +6,6 @@
 import UIKit
 
 final class LoginViewController: UIViewController {
-    
     weak var coordinator: MainCoordinator?
     var loginDelegate: LoginViewControllerDelegate? = LoginInspector()
     
@@ -15,6 +14,9 @@ final class LoginViewController: UIViewController {
         return CurrentUserService(user: testUser)
     }()
     
+    private let passwordCracker = PasswordCracker()
+    private var activityIndicator: UIActivityIndicatorView!
+
     // MARK: Visual content
     
     var loginScrollView: UIScrollView = {
@@ -94,7 +96,7 @@ final class LoginViewController: UIViewController {
         password.layer.borderColor = UIColor.lightGray.cgColor
         password.layer.borderWidth = 0.25
         password.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: password.frame.height))
-        password.isSecureTextEntry = true
+        password.isSecureTextEntry = false
         password.textColor = .black
         password.font = UIFont.systemFont(ofSize: 16)
         password.autocapitalizationType = .none
@@ -106,15 +108,69 @@ final class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.isHidden = true
 
         setupViews()
         setupConstraints()
-
+        setupActivityIndicator()
+        setupBruteForceButton()
+        
         loginField.text = "correctLogin"
         passwordField.text = "correctPassword"
+    }
+    
+    private func setupActivityIndicator() {
+        activityIndicator = UIActivityIndicatorView(style: .large)
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        activityIndicator.hidesWhenStopped = true
+        view.addSubview(activityIndicator)
+        
+        NSLayoutConstraint.activate([
+            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+        ])
+    }
+    
+    private func setupBruteForceButton() {
+        let bruteForceButton = UIButton(type: .system)
+        bruteForceButton.setTitle("Подобрать пароль", for: .normal)
+        bruteForceButton.addTarget(self, action: #selector(startBruteForce), for: .touchUpInside)
+        bruteForceButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(bruteForceButton)
+        
+        NSLayoutConstraint.activate([
+            bruteForceButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            bruteForceButton.topAnchor.constraint(equalTo: loginButton.bottomAnchor, constant: 20)
+        ])
+    }
+    
+    @objc private func startBruteForce() {
+        activityIndicator.startAnimating()
+        let randomPassword = generateRandomPassword()
+        passwordField.isSecureTextEntry = false
+        DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+            self?.passwordCracker.bruteForce(passwordToUnlock: randomPassword) { foundPassword in
+                DispatchQueue.main.async {
+                    self?.activityIndicator.stopAnimating()
+                    self?.passwordField.isSecureTextEntry = false
+                    self?.passwordField.text = foundPassword
+                    self?.showAlert(with: "Пароль найден", message: foundPassword)
+                }
+            }
+        }
+    }
+    
+    private func generateRandomPassword() -> String {
+        let characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        return String((0..<4).map{ _ in characters.randomElement()! })
+    }
+    
+    private func showAlert(with title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
     
     private func setupViews() {
@@ -161,7 +217,7 @@ final class LoginViewController: UIViewController {
             loginButton.heightAnchor.constraint(equalToConstant: 50),
         ])
     }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         let nc = NotificationCenter.default
@@ -175,7 +231,7 @@ final class LoginViewController: UIViewController {
         nc.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
         nc.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
-    
+
     // MARK: - Event handlers
 
     @objc private func touchLoginButton() {
@@ -184,7 +240,7 @@ final class LoginViewController: UIViewController {
             showAlert(with: "Login Required", message: "Please enter your login and password")
             return
         }
-
+        
         #if DEBUG
         let userService = TestUserService(user: User(login: "testLogin", fullName: "Test Login", avatar: UIImage(named: "userAvatar2")!, status: "Just Testing"))
         #else
@@ -198,7 +254,7 @@ final class LoginViewController: UIViewController {
         }
     }
     
-    private func showAlert(with title: String, message: String) {
+    private func showCustomAlert(with title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
