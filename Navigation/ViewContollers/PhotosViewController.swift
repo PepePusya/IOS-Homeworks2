@@ -23,11 +23,15 @@ class PhotosViewController: UIViewController, ImageLibrarySubscriber {
         self.photosCollectionView.dataSource = self
         self.photosCollectionView.delegate = self
         setupConstraints()
-
-        imagePublisherFacade = ImagePublisherFacade()
-        imagePublisherFacade?.subscribe(self)
-        addImages()
+        
+// zapolnenie collecii neobrabotannimi photo
+        images = (1...20).compactMap { UIImage(named: "\($0)") }
+        photosCollectionView.reloadData()
+        
+        // obrabotka photo
+        processImagesSequentially()
     }
+  
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -72,30 +76,37 @@ class PhotosViewController: UIViewController, ImageLibrarySubscriber {
     private func addImages() {
         images = (1...20).compactMap { UIImage(named: "\($0)") }
         photosCollectionView.reloadData()
-        processImages()
+        processImagesSequentially()
     }
 
-    private func processImages() {
-        // Example of different QualityOfService levels
+    private func processImagesSequentially() {
         let qosLevels: [QualityOfService] = [.userInteractive, .userInitiated, .utility, .background]
+        processNextQoS(qosLevels: qosLevels)
+    }
 
-        for qos in qosLevels {
-            let start = CFAbsoluteTimeGetCurrent()
-            imageProcessor.processImagesOnThread(sourceImages: images, filter: .noir, qos: qos) { [weak self] processedImages in
-                guard let self = self else { return }
-                self.images = processedImages.compactMap { cgImage -> UIImage? in
-                    guard let cgImage = cgImage else { return nil }
-                    return UIImage(cgImage: cgImage)
-                }
-                DispatchQueue.main.async {
-                    self.photosCollectionView.reloadData()
-                    let diff = CFAbsoluteTimeGetCurrent() - start
-                    print("Processing with \(qos) took \(diff) seconds")
-                }
+    private func processNextQoS(qosLevels: [QualityOfService], index: Int = 0) {
+        guard index < qosLevels.count else { return }
+        
+        let qos = qosLevels[index]
+        let start = CFAbsoluteTimeGetCurrent()
+        
+        imageProcessor.processImagesOnThread(sourceImages: images, filter: .noir, qos: qos) { [weak self] processedImages in
+            guard let self = self else { return }
+            self.images = processedImages.compactMap { cgImage -> UIImage? in
+                guard let cgImage = cgImage else { return nil }
+                return UIImage(cgImage: cgImage)
+            }
+            
+            DispatchQueue.main.async {
+                self.photosCollectionView.reloadData()
+                let diff = CFAbsoluteTimeGetCurrent() - start
+                print("Processing with \(qos) took \(diff) seconds")
+                self.processNextQoS(qosLevels: qosLevels, index: index + 1)
             }
         }
     }
-}
+    }
+
 
 // MARK: - Extensions
 
