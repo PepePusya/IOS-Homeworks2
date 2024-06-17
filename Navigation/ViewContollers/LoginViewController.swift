@@ -2,7 +2,6 @@
 //
 // LoginViewController.swift
 // Navigation
-
 import UIKit
 
 final class LoginViewController: UIViewController {
@@ -128,8 +127,8 @@ final class LoginViewController: UIViewController {
         view.addSubview(activityIndicator)
         
         NSLayoutConstraint.activate([
-            activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            activityIndicator.centerYAnchor.constraint(equalTo: passwordField.centerYAnchor),
+            activityIndicator.trailingAnchor.constraint(equalTo: passwordField.leadingAnchor, constant: -8)
         ])
     }
     
@@ -147,6 +146,7 @@ final class LoginViewController: UIViewController {
     }
     
     @objc private func startBruteForce() {
+        loginButton.isEnabled = false  // Деактивируем кнопку
         activityIndicator.startAnimating()
         let randomPassword = generateRandomPassword()
         passwordField.isSecureTextEntry = false
@@ -157,6 +157,7 @@ final class LoginViewController: UIViewController {
                     self?.passwordField.isSecureTextEntry = false
                     self?.passwordField.text = foundPassword
                     self?.showAlert(with: "Пароль найден", message: foundPassword)
+                    self?.loginButton.isEnabled = true  // Активируем кнопку после завершения
                 }
             }
         }
