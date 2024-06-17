@@ -110,7 +110,7 @@ final class LoginViewController: UIViewController {
         
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.isHidden = true
-
+        
         setupViews()
         setupConstraints()
         setupActivityIndicator()
@@ -118,6 +118,26 @@ final class LoginViewController: UIViewController {
         
         loginField.text = "correctLogin"
         passwordField.text = "correctPassword"
+        
+        
+         // Запуск таймера при загрузке экрана
+         TimerManager.shared.startTimer()
+         
+         // Добавление наблюдателя для уведомления
+         NotificationCenter.default.addObserver(self, selector: #selector(showBreakReminder), name: Notification.Name("showBreakReminder"), object: nil)
+     }
+     
+     override func viewWillDisappear(_ animated: Bool) {
+         super.viewWillDisappear(animated)
+         TimerManager.shared.stopTimer()
+     }
+     
+     @objc private func showBreakReminder() {
+         let alert = UIAlertController(title: "Перерыв", message: "Вы используете приложение уже 5 минут. Сделайте перерыв для глаз.", preferredStyle: .alert)
+         alert.addAction(UIAlertAction(title: "ОК", style: .default))
+         present(alert, animated: true)
+     
+
     }
     
     private func setupActivityIndicator() {
@@ -146,7 +166,7 @@ final class LoginViewController: UIViewController {
     }
     
     @objc private func startBruteForce() {
-        loginButton.isEnabled = false  // Деактивируем кнопку
+        loginButton.isEnabled = false  // deactiviruyu
         activityIndicator.startAnimating()
         let randomPassword = generateRandomPassword()
         passwordField.isSecureTextEntry = false
@@ -157,7 +177,7 @@ final class LoginViewController: UIViewController {
                     self?.passwordField.isSecureTextEntry = false
                     self?.passwordField.text = foundPassword
                     self?.showAlert(with: "Пароль найден", message: foundPassword)
-                    self?.loginButton.isEnabled = true  // Активируем кнопку после завершения
+                    self?.loginButton.isEnabled = true  // Aktiviruyu
                 }
             }
         }

@@ -4,7 +4,6 @@
 //
 //  Created by Anna Zaytseva on 2024/05/17.
 
-
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -21,4 +20,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.makeKeyAndVisible()
     }
 
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        // Запуск
+        TimerManager.shared.startTimer()
+    }
+
+    func sceneWillResignActive(_ scene: UIScene) {
+        // Остановка 
+        TimerManager.shared.stopTimer()
+    }
 }
