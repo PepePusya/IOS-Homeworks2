@@ -114,8 +114,6 @@
 		3601A29B28490DDF000D261A = {
 			isa = PBXGroup;
 			children = (
-				5CF0F3F72C2045B000EF97A9 /* TimerManager.swift */,
-				5CC58D9B2C1DAE6100763959 /* PasswordCracker.swift */,
 				3601A2A628490DDF000D261A /* Navigation */,
 				3601A2A528490DDF000D261A /* Products */,
 			);
@@ -132,6 +130,8 @@
 		3601A2A628490DDF000D261A /* Navigation */ = {
 			isa = PBXGroup;
 			children = (
+				5CC58D9B2C1DAE6100763959 /* PasswordCracker.swift */,
+				5CF0F3F72C2045B000EF97A9 /* TimerManager.swift */,
 				5CC58D922C197E9900763959 /* Coordinator */,
 				5C8BDD562C0995500054C29B /* CustomViews */,
 				5C8BDD5D2C0CB5C10054C29B /* ViewModels */,

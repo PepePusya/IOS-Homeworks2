@@ -1,4 +1,3 @@
-//
 //  SceneDelegate.swift
 //  Navigation
 //
@@ -18,15 +17,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         loginViewController.loginDelegate = loginInspector
         window?.rootViewController = UINavigationController(rootViewController: loginViewController)
         window?.makeKeyAndVisible()
-    }
-
-    func sceneDidBecomeActive(_ scene: UIScene) {
-        // Запуск
-        TimerManager.shared.startTimer()
-    }
-
-    func sceneWillResignActive(_ scene: UIScene) {
-        // Остановка 
-        TimerManager.shared.stopTimer()
     }
 }

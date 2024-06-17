@@ -3,8 +3,10 @@
 // LoginViewController.swift
 // Navigation
 import UIKit
+import Combine
 
 final class LoginViewController: UIViewController {
+    
     weak var coordinator: MainCoordinator?
     var loginDelegate: LoginViewControllerDelegate? = LoginInspector()
     
@@ -15,6 +17,7 @@ final class LoginViewController: UIViewController {
     
     private let passwordCracker = PasswordCracker()
     private var activityIndicator: UIActivityIndicatorView!
+    private var cancellables = Set<AnyCancellable>()
 
     // MARK: Visual content
     
@@ -63,7 +66,7 @@ final class LoginViewController: UIViewController {
 
         button.setTitle("Login", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.addTarget(nil, action: #selector(touchLoginButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(LoginViewController.touchLoginButton), for: .touchUpInside)
         button.layer.cornerRadius = LayoutConstants.cornerRadius
         button.clipsToBounds = true
         return button
@@ -110,7 +113,7 @@ final class LoginViewController: UIViewController {
         
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.isHidden = true
-        
+
         setupViews()
         setupConstraints()
         setupActivityIndicator()
@@ -119,27 +122,51 @@ final class LoginViewController: UIViewController {
         loginField.text = "correctLogin"
         passwordField.text = "correctPassword"
         
-        
-         // Запуск таймера при загрузке экрана
-         TimerManager.shared.startTimer()
-         
-         // Добавление наблюдателя для уведомления
-         NotificationCenter.default.addObserver(self, selector: #selector(showBreakReminder), name: Notification.Name("showBreakReminder"), object: nil)
-     }
-     
-     override func viewWillDisappear(_ animated: Bool) {
-         super.viewWillDisappear(animated)
-         TimerManager.shared.stopTimer()
-     }
-     
-     @objc private func showBreakReminder() {
-         let alert = UIAlertController(title: "Перерыв", message: "Вы используете приложение уже 5 минут. Сделайте перерыв для глаз.", preferredStyle: .alert)
-         alert.addAction(UIAlertAction(title: "ОК", style: .default))
-         present(alert, animated: true)
-     
+        startTimer()
+    }
 
+    private func startTimer() {
+        Timer.publish(every: 3, on: .main, in: .default) // Установите интервал 3 секунды для тестирования
+            .autoconnect()
+            .first()
+            .sink { [weak self] _ in
+                self?.showBreakReminder()
+            }
+            .store(in: &cancellables)
+    }
+
+    @objc private func showBreakReminder() {
+        let alert = UIAlertController(title: "Перерыв", message: "Вы используете приложение уже 5 минут. Сделайте перерыв для глаз.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "ОК", style: .default))
+        present(alert, animated: true)
     }
     
+    @objc private func touchLoginButton() {
+        guard let login = loginField.text, !login.isEmpty,
+              let password = passwordField.text, !password.isEmpty else {
+            showAlert(with: "Login Required", message: "Please enter your login and password")
+            return
+        }
+        
+        #if DEBUG
+        let userService = TestUserService(user: User(login: "testLogin", fullName: "Test Login", avatar: UIImage(named: "userAvatar2")!, status: "Just Testing"))
+        #else
+        let userService = CurrentUserService(user: User(login: "prodUser", fullName: "Production User", avatar: UIImage(named: "prodAvatar")!, status: "Production Mode"))
+        #endif
+
+        if loginDelegate?.check(login: login, password: password) == true {
+            coordinator?.showMainTabBar()
+        } else {
+            showAlert(with: "Login Failed", message: "Invalid username or password")
+        }
+    }
+
+    private func showAlert(with title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+
     private func setupActivityIndicator() {
         activityIndicator = UIActivityIndicatorView(style: .large)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -166,32 +193,21 @@ final class LoginViewController: UIViewController {
     }
     
     @objc private func startBruteForce() {
-        loginButton.isEnabled = false  // deactiviruyu
+        loginButton.isEnabled = false  // Деактивируем кнопку
         activityIndicator.startAnimating()
-        let randomPassword = generateRandomPassword()
+        let fixedPassword = "correctPassword"  // Фиксированный пароль
         passwordField.isSecureTextEntry = false
         DispatchQueue.global(qos: .userInitiated).async { [weak self] in
-            self?.passwordCracker.bruteForce(passwordToUnlock: randomPassword) { foundPassword in
+            self?.passwordCracker.bruteForce(passwordToUnlock: fixedPassword) { foundPassword in
                 DispatchQueue.main.async {
                     self?.activityIndicator.stopAnimating()
                     self?.passwordField.isSecureTextEntry = false
                     self?.passwordField.text = foundPassword
                     self?.showAlert(with: "Пароль найден", message: foundPassword)
-                    self?.loginButton.isEnabled = true  // Aktiviruyu
+                    self?.loginButton.isEnabled = true  // Активируем кнопку после завершения
                 }
             }
         }
-    }
-    
-    private func generateRandomPassword() -> String {
-        let characters = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        return String((0..<4).map{ _ in characters.randomElement()! })
-    }
-    
-    private func showAlert(with title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
     }
     
     private func setupViews() {
@@ -239,57 +255,10 @@ final class LoginViewController: UIViewController {
         ])
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        let nc = NotificationCenter.default
-        nc.addObserver(self, selector: #selector(keyboardShow), name: UIResponder.keyboardWillShowNotification, object: nil)
-        nc.addObserver(self, selector: #selector(keyboardHide), name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        let nc = NotificationCenter.default
-        nc.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        nc.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-    }
-
-    // MARK: - Event handlers
-
-    @objc private func touchLoginButton() {
-        guard let login = loginField.text, !login.isEmpty,
-              let password = passwordField.text, !password.isEmpty else {
-            showAlert(with: "Login Required", message: "Please enter your login and password")
-            return
-        }
-        
-        #if DEBUG
-        let userService = TestUserService(user: User(login: "testLogin", fullName: "Test Login", avatar: UIImage(named: "userAvatar2")!, status: "Just Testing"))
-        #else
-        let userService = CurrentUserService(user: User(login: "prodUser", fullName: "Production User", avatar: UIImage(named: "prodAvatar")!, status: "Production Mode"))
-        #endif
-
-        if loginDelegate?.check(login: login, password: password) == true {
-            coordinator?.showMainTabBar()
-        } else {
-            showAlert(with: "Login Failed", message: "Invalid username or password")
-        }
-    }
-    
-    private func showCustomAlert(with title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
-    }
-    
-    @objc private func keyboardShow(notification: NSNotification) {
-        if let keyboardSize = (notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue {
-            loginScrollView.contentOffset.y = keyboardSize.height - (loginScrollView.frame.height - loginButton.frame.minY)
-            loginScrollView.verticalScrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardSize.height, right: 0)
-        }
-    }
-
-    @objc private func keyboardHide(notification: NSNotification) {
-        loginScrollView.contentOffset = CGPoint(x: 0, y: 0)
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
     }
 }
 
