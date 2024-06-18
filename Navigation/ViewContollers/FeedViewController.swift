@@ -1,6 +1,5 @@
 // FeedViewController.swift
 // Navigation
-
 import UIKit
 
 final class FeedViewController: UIViewController {
@@ -27,6 +26,13 @@ final class FeedViewController: UIViewController {
         return label
     }()
     
+    private lazy var showMediaButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Show Media Player", for: .normal)
+        button.addTarget(self, action: #selector(showMediaPlayer), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tabBarItem = UITabBarItem(title: "Feed", image: UIImage(systemName: "text.bubble"), selectedImage: UIImage(systemName: "text.bubble.fill"))
@@ -46,6 +52,7 @@ final class FeedViewController: UIViewController {
         stackView.addArrangedSubview(guessTextField)
         stackView.addArrangedSubview(checkGuessButton)
         stackView.addArrangedSubview(resultLabel)
+        stackView.addArrangedSubview(showMediaButton)
         
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
@@ -70,6 +77,10 @@ final class FeedViewController: UIViewController {
     
     @objc func tapPostButton() {
         coordinator?.present(.post)
+    }
+    
+    @objc private func showMediaPlayer() {
+        coordinator?.present(.media)
     }
     
     private func bindViewModel() {

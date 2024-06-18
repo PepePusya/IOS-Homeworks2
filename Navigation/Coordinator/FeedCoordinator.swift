@@ -12,6 +12,7 @@ final class FeedCoordinator: Coordinator {
     enum Presentation {
         case post
         case info
+        case media
     }
 
     init(navigationController: UINavigationController) {
@@ -34,6 +35,9 @@ final class FeedCoordinator: Coordinator {
         case .info:
             let infoVC = InfoViewController()
             navigationController.present(infoVC, animated: true, completion: nil)
+        case .media:
+            let mediaVC = MediaViewController()
+            navigationController.present(mediaVC, animated: true, completion: nil)
         }
     }
 }

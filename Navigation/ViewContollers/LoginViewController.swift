@@ -3,18 +3,16 @@
 // LoginViewController.swift
 // Navigation]
 
-
 import UIKit
 import Combine
 import Foundation
-
 
 final class LoginViewController: UIViewController {
     weak var coordinator: MainCoordinator?
     var loginDelegate: LoginViewControllerDelegate? = LoginInspector()
     
     var userService: UserService = {
-        let testUser = User(login: "testUser", fullName: "Test User", avatar: UIImage(named: "userAvatar")!, status: "Just testing")
+        let testUser = User(login: "correctLogin", fullName: "Test User", avatar: UIImage(named: "userAvatar")!, status: "Just testing")
         return CurrentUserService(user: testUser)
     }()
     
@@ -252,7 +250,6 @@ final class LoginViewController: UIViewController {
             }
         }
     }
-    
     private func handleError(_ error: LoginError) {
         let errorMessage: String
         switch error {
