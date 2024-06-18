@@ -1,12 +1,15 @@
 //
 //
 // LoginViewController.swift
-// Navigation
+// Navigation]
+
+
 import UIKit
 import Combine
+import Foundation
+
 
 final class LoginViewController: UIViewController {
-    
     weak var coordinator: MainCoordinator?
     var loginDelegate: LoginViewControllerDelegate? = LoginInspector()
     
@@ -18,7 +21,7 @@ final class LoginViewController: UIViewController {
     private let passwordCracker = PasswordCracker()
     private var activityIndicator: UIActivityIndicatorView!
     private var cancellables = Set<AnyCancellable>()
-
+    
     // MARK: Visual content
     
     var loginScrollView: UIScrollView = {
@@ -63,10 +66,10 @@ final class LoginViewController: UIViewController {
             button.setBackgroundImage(pixel.image(alpha: 0.6), for: .highlighted)
             button.setBackgroundImage(pixel.image(alpha: 0.4), for: .disabled)
         }
-
+        
         button.setTitle("Login", for: .normal)
         button.setTitleColor(.white, for: .normal)
-        button.addTarget(self, action: #selector(LoginViewController.touchLoginButton), for: .touchUpInside)
+        button.addTarget(self, action: #selector(touchLoginButton), for: .touchUpInside)
         button.layer.cornerRadius = LayoutConstants.cornerRadius
         button.clipsToBounds = true
         return button
@@ -113,7 +116,7 @@ final class LoginViewController: UIViewController {
         
         view.backgroundColor = .systemBackground
         navigationController?.navigationBar.isHidden = true
-
+        
         setupViews()
         setupConstraints()
         setupActivityIndicator()
@@ -124,49 +127,51 @@ final class LoginViewController: UIViewController {
         
         startTimer()
     }
-
-    private func startTimer() {
-        Timer.publish(every: 3, on: .main, in: .default) // Установите интервал 3 секунды для тестирования
-            .autoconnect()
-            .first()
-            .sink { [weak self] _ in
-                self?.showBreakReminder()
-            }
-            .store(in: &cancellables)
-    }
-
-    @objc private func showBreakReminder() {
-        let alert = UIAlertController(title: "Перерыв", message: "Вы используете приложение уже 5 минут. Сделайте перерыв для глаз.", preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "ОК", style: .default))
-        present(alert, animated: true)
+    
+    private func setupViews() {
+        view.addSubview(loginScrollView)
+        loginScrollView.addSubview(contentView)
+        
+        contentView.addSubviews(vkLogo, loginStackView, loginButton)
+        
+        loginStackView.addArrangedSubview(loginField)
+        loginStackView.addArrangedSubview(passwordField)
+        
+        loginField.delegate = self
+        passwordField.delegate = self
     }
     
-    @objc private func touchLoginButton() {
-        guard let login = loginField.text, !login.isEmpty,
-              let password = passwordField.text, !password.isEmpty else {
-            showAlert(with: "Login Required", message: "Please enter your login and password")
-            return
-        }
-        
-        #if DEBUG
-        let userService = TestUserService(user: User(login: "testLogin", fullName: "Test Login", avatar: UIImage(named: "userAvatar2")!, status: "Just Testing"))
-        #else
-        let userService = CurrentUserService(user: User(login: "prodUser", fullName: "Production User", avatar: UIImage(named: "prodAvatar")!, status: "Production Mode"))
-        #endif
-
-        if loginDelegate?.check(login: login, password: password) == true {
-            coordinator?.showMainTabBar()
-        } else {
-            showAlert(with: "Login Failed", message: "Invalid username or password")
-        }
+    private func setupConstraints() {
+        NSLayoutConstraint.activate([
+            loginScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            loginScrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            loginScrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            loginScrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            contentView.topAnchor.constraint(equalTo: loginScrollView.topAnchor),
+            contentView.trailingAnchor.constraint(equalTo: loginScrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: loginScrollView.bottomAnchor),
+            contentView.leadingAnchor.constraint(equalTo: loginScrollView.leadingAnchor),
+            contentView.centerXAnchor.constraint(equalTo: loginScrollView.centerXAnchor),
+            contentView.centerYAnchor.constraint(equalTo: loginScrollView.centerYAnchor),
+            
+            vkLogo.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 120),
+            vkLogo.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
+            vkLogo.heightAnchor.constraint(equalToConstant: 100),
+            vkLogo.widthAnchor.constraint(equalToConstant: 100),
+            
+            loginStackView.topAnchor.constraint(equalTo: vkLogo.bottomAnchor, constant: 120),
+            loginStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: LayoutConstants.leadingMargin),
+            loginStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: LayoutConstants.trailingMargin),
+            loginStackView.heightAnchor.constraint(equalToConstant: 100),
+            
+            loginButton.topAnchor.constraint(equalTo: loginStackView.bottomAnchor, constant: LayoutConstants.indent),
+            loginButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: LayoutConstants.leadingMargin),
+            loginButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: LayoutConstants.trailingMargin),
+            loginButton.heightAnchor.constraint(equalToConstant: 50),
+        ])
     }
-
-    private func showAlert(with title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .default))
-        present(alert, animated: true)
-    }
-
+    
     private func setupActivityIndicator() {
         activityIndicator = UIActivityIndicatorView(style: .large)
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
@@ -192,6 +197,84 @@ final class LoginViewController: UIViewController {
         ])
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        cancellables.forEach { $0.cancel() }
+        cancellables.removeAll()
+    }
+    
+    private func startTimer() {
+        Timer.publish(every: 300, on: .main, in: .default) // 5 минут
+            .autoconnect()
+            .first()
+            .sink { [weak self] _ in
+                self?.showBreakReminder()
+            }
+            .store(in: &cancellables)
+    }
+    
+    @objc private func showBreakReminder() {
+        let alert = UIAlertController(title: "Перерыв", message: "Вы используете приложение уже 5 минут. Сделайте перерыв для глаз.", preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "ОК", style: .default))
+        present(alert, animated: true)
+    }
+    
+    @objc private func touchLoginButton() {
+        do {
+            try performLogin()
+        } catch let error as LoginError {
+            handleError(error)
+        } catch {
+            handleError(.unknownError)
+        }
+    }
+
+    private func performLogin() throws {
+        guard let login = loginField.text, !login.isEmpty,
+              let password = passwordField.text, !password.isEmpty else {
+            throw LoginError.emptyCredentials
+        }
+        
+        userService.getUser(login: login) { [weak self] (result: Result<User, LoginError>) in
+            switch result {
+            case .success(let user):
+                // Обязательное условие, без которого нет смысла продолжать выполнение
+                guard user.login == login else {
+                    preconditionFailure("User login must match the entered login")
+                }
+                // Если данные успешно загружены и проверка пройдена
+                print("User loaded: \(user.fullName)")
+                self?.coordinator?.showMainTabBar()
+                
+            case .failure(let error):
+                // Обработка ошибки
+                self?.handleError(error)
+            }
+        }
+    }
+    
+    private func handleError(_ error: LoginError) {
+        let errorMessage: String
+        switch error {
+        case .emptyCredentials:
+            errorMessage = "Please enter your login and password"
+        case .invalidCredentials:
+            errorMessage = "Invalid username or password"
+        case .networkError:
+            errorMessage = "Network error. Please try again."
+        case .unknownError:
+            errorMessage = "An unknown error occurred. Please try again."
+        }
+        
+        showAlert(with: "Login Failed", message: errorMessage)
+    }
+    
+    private func showAlert(with title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
+    }
+    
     @objc private func startBruteForce() {
         loginButton.isEnabled = false  // Деактивируем кнопку
         activityIndicator.startAnimating()
@@ -208,57 +291,6 @@ final class LoginViewController: UIViewController {
                 }
             }
         }
-    }
-    
-    private func setupViews() {
-        view.addSubview(loginScrollView)
-        loginScrollView.addSubview(contentView)
-        
-        contentView.addSubviews(vkLogo, loginStackView, loginButton)
-        
-        loginStackView.addArrangedSubview(loginField)
-        loginStackView.addArrangedSubview(passwordField)
-        
-        loginField.delegate = self
-        passwordField.delegate = self
-    }
-    
-    private func setupConstraints() {
-        NSLayoutConstraint.activate([
-
-            loginScrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            loginScrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            loginScrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            loginScrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-
-            contentView.topAnchor.constraint(equalTo: loginScrollView.topAnchor),
-            contentView.trailingAnchor.constraint(equalTo: loginScrollView.trailingAnchor),
-            contentView.bottomAnchor.constraint(equalTo: loginScrollView.bottomAnchor),
-            contentView.leadingAnchor.constraint(equalTo: loginScrollView.leadingAnchor),
-            contentView.centerXAnchor.constraint(equalTo: loginScrollView.centerXAnchor),
-            contentView.centerYAnchor.constraint(equalTo: loginScrollView.centerYAnchor),
-
-            vkLogo.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 120),
-            vkLogo.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            vkLogo.heightAnchor.constraint(equalToConstant: 100),
-            vkLogo.widthAnchor.constraint(equalToConstant: 100),
-
-            loginStackView.topAnchor.constraint(equalTo: vkLogo.bottomAnchor, constant: 120),
-            loginStackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: LayoutConstants.leadingMargin),
-            loginStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: LayoutConstants.trailingMargin),
-            loginStackView.heightAnchor.constraint(equalToConstant: 100),
-
-            loginButton.topAnchor.constraint(equalTo: loginStackView.bottomAnchor, constant: LayoutConstants.indent),
-            loginButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: LayoutConstants.leadingMargin),
-            loginButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: LayoutConstants.trailingMargin),
-            loginButton.heightAnchor.constraint(equalToConstant: 50),
-        ])
-    }
-
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        cancellables.forEach { $0.cancel() }
-        cancellables.removeAll()
     }
 }
 

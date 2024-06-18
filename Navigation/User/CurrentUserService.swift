@@ -6,6 +6,7 @@
 //
 
 import Foundation
+
 class CurrentUserService: UserService {
     private var user: User
     
@@ -13,8 +14,11 @@ class CurrentUserService: UserService {
         self.user = user
     }
     
-    func getUser(login: String) -> User? {
-        return login == user.login ? user : nil
+    func getUser(login: String, completion: @escaping (Result<User, LoginError>) -> Void) {
+        if login == user.login {
+            completion(.success(user))
+        } else {
+            completion(.failure(.invalidCredentials))
         }
     }
-
+}

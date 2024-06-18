@@ -4,10 +4,10 @@
 //
 //  Created by Anna Zaytseva on 2024/05/10.
 //
-
 import Foundation
-import UIKit
+
+
 
 protocol UserService {
-    func getUser(login: String) -> User?
+    func getUser(login: String, completion: @escaping (Result<User, LoginError>) -> Void)
 }

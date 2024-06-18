@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+
 class User {
     var login: String
     var fullName: String
