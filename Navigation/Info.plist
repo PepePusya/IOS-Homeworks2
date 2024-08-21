@@ -4,5 +4,9 @@
 <dict>
 	<key>CFBundleIdentifier</key>
 	<string></string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Приложению требуется доступ к микрофону для записи аудио</string>
 </dict>
 </plist>

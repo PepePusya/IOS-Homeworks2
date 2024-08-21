@@ -31,11 +31,17 @@ final class FeedViewController: UIViewController {
         return button
     }()
     
-    // Добавляем новую кнопку для показа списка видео
     private lazy var showVideoListButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("Show Video List", for: .normal)
         button.addTarget(self, action: #selector(showVideoList), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var showAudioRecorderButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Show Audio Recorder", for: .normal)
+        button.addTarget(self, action: #selector(showAudioRecorder), for: .touchUpInside)
         return button
     }()
     
@@ -59,7 +65,8 @@ final class FeedViewController: UIViewController {
         stackView.addArrangedSubview(checkGuessButton)
         stackView.addArrangedSubview(resultLabel)
         stackView.addArrangedSubview(showMediaButton)
-        stackView.addArrangedSubview(showVideoListButton) // Добавляем кнопку в стек
+        stackView.addArrangedSubview(showVideoListButton)
+        stackView.addArrangedSubview(showAudioRecorderButton)
         
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
@@ -90,9 +97,12 @@ final class FeedViewController: UIViewController {
         coordinator?.present(.media)
     }
     
-    // Добавляем метод для перехода на экран со списком видео
     @objc private func showVideoList() {
         coordinator?.present(.videoFeed)
+    }
+    
+    @objc private func showAudioRecorder() {
+        coordinator?.present(.audioRecorder)
     }
     
     private func bindViewModel() {

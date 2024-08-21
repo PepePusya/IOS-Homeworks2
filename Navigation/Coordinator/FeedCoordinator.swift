@@ -14,6 +14,7 @@ final class FeedCoordinator: Coordinator {
         case info
         case media
         case videoFeed
+        case audioRecorder
     }
 
     init(navigationController: UINavigationController) {
@@ -42,6 +43,10 @@ final class FeedCoordinator: Coordinator {
         case .videoFeed:
             let videoFeedVC = VideoFeedViewController()
             navigationController.pushViewController(videoFeedVC, animated: true)
-        }
-    }
-}
+            
+        case .audioRecorder:  // Новый случай
+              let audioRecorderVC = AudioRecorderViewController()
+              navigationController.pushViewController(audioRecorderVC, animated: true)
+          }
+      }        }
+    

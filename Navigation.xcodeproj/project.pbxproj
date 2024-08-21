@@ -39,6 +39,7 @@
 		5C3A5D2A2BF73FAA007CF17D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3A5D292BF73FAA007CF17D /* SceneDelegate.swift */; };
 		5C3A5D2D2BFC4F5D007CF17D /* LoginFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3A5D2C2BFC4F5D007CF17D /* LoginFactory.swift */; };
 		5C3A5D2F2BFC4FBB007CF17D /* MyLoginFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C3A5D2E2BFC4FBB007CF17D /* MyLoginFactory.swift */; };
+		5C4B17792C75ED3D00F98089 /* AudioRecorderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C4B17782C75ED3D00F98089 /* AudioRecorderViewController.swift */; };
 		5C8BDD592C0995A90054C29B /* CustomButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C8BDD582C0995A90054C29B /* CustomButton.swift */; };
 		5C8BDD5B2C0995E60054C29B /* FeedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C8BDD5A2C0995E60054C29B /* FeedModel.swift */; };
 		5C8BDD5F2C0CB60B0054C29B /* FeedViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C8BDD5E2C0CB60B0054C29B /* FeedViewModel.swift */; };
@@ -93,6 +94,7 @@
 		5C3A5D292BF73FAA007CF17D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		5C3A5D2C2BFC4F5D007CF17D /* LoginFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFactory.swift; sourceTree = "<group>"; };
 		5C3A5D2E2BFC4FBB007CF17D /* MyLoginFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLoginFactory.swift; sourceTree = "<group>"; };
+		5C4B17782C75ED3D00F98089 /* AudioRecorderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRecorderViewController.swift; sourceTree = "<group>"; };
 		5C8BDD582C0995A90054C29B /* CustomButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomButton.swift; sourceTree = "<group>"; };
 		5C8BDD5A2C0995E60054C29B /* FeedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedModel.swift; sourceTree = "<group>"; };
 		5C8BDD5E2C0CB60B0054C29B /* FeedViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedViewModel.swift; sourceTree = "<group>"; };
@@ -278,6 +280,7 @@
 				5CF0F4252C75D9D100EF97A9 /* VideoViewController.swift */,
 				5CF0F4272C75DA1000EF97A9 /* VideoListVewController.swift */,
 				5CF0F4292C75DB0800EF97A9 /* VideoFeedViewController.swift */,
+				5C4B17782C75ED3D00F98089 /* AudioRecorderViewController.swift */,
 			);
 			path = "Media View Controllers";
 			sourceTree = "<group>";
@@ -398,6 +401,7 @@
 				5C8BDD5F2C0CB60B0054C29B /* FeedViewModel.swift in Sources */,
 				36528E39284F700900965BA4 /* ExtensionUIImage.swift in Sources */,
 				36C5F05C2850B1B1005EFC6C /* PhotosTableViewCell.swift in Sources */,
+				5C4B17792C75ED3D00F98089 /* AudioRecorderViewController.swift in Sources */,
 				5C3A5CF92BEE27F7007CF17D /* UserService.swift in Sources */,
 				3601A2C42849E232000D261A /* InfoViewController.swift in Sources */,
 				5CF0F4282C75DA1000EF97A9 /* VideoListVewController.swift in Sources */,
