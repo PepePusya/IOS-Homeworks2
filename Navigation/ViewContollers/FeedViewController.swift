@@ -1,5 +1,3 @@
-// FeedViewController.swift
-// Navigation
 import UIKit
 
 final class FeedViewController: UIViewController {
@@ -33,6 +31,14 @@ final class FeedViewController: UIViewController {
         return button
     }()
     
+    // Добавляем новую кнопку для показа списка видео
+    private lazy var showVideoListButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("Show Video List", for: .normal)
+        button.addTarget(self, action: #selector(showVideoList), for: .touchUpInside)
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         tabBarItem = UITabBarItem(title: "Feed", image: UIImage(systemName: "text.bubble"), selectedImage: UIImage(systemName: "text.bubble.fill"))
@@ -53,6 +59,7 @@ final class FeedViewController: UIViewController {
         stackView.addArrangedSubview(checkGuessButton)
         stackView.addArrangedSubview(resultLabel)
         stackView.addArrangedSubview(showMediaButton)
+        stackView.addArrangedSubview(showVideoListButton) // Добавляем кнопку в стек
         
         NSLayoutConstraint.activate([
             stackView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
@@ -81,6 +88,11 @@ final class FeedViewController: UIViewController {
     
     @objc private func showMediaPlayer() {
         coordinator?.present(.media)
+    }
+    
+    // Добавляем метод для перехода на экран со списком видео
+    @objc private func showVideoList() {
+        coordinator?.present(.videoFeed)
     }
     
     private func bindViewModel() {

@@ -13,6 +13,7 @@ final class FeedCoordinator: Coordinator {
         case post
         case info
         case media
+        case videoFeed
     }
 
     init(navigationController: UINavigationController) {
@@ -38,6 +39,9 @@ final class FeedCoordinator: Coordinator {
         case .media:
             let mediaVC = MediaViewController()
             navigationController.present(mediaVC, animated: true, completion: nil)
+        case .videoFeed:
+            let videoFeedVC = VideoFeedViewController()
+            navigationController.pushViewController(videoFeedVC, animated: true)
         }
     }
 }
